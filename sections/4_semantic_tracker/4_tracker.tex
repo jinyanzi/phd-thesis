@@ -1,0 +1,38 @@
+\section{Semantic Tracker with Scene Knowledge}
+
+\subsection{Semantic Knowledge Update}
+With some successfully tracked objects, we may adaptively update the semantic scene. 
+More specifically, we update the corresponding topics with well-tracked objects, which are those enter through the entry area, tightly follow its belonging topic, and successfully exit through exit areas. 
+The scene is updated as follows: 
+The first and last location, along with the direction of a high-quality trajectory is used to update the entry/exit candidates; the rectangle perpendicular width wrt. its topic is used to update the topic perpendicular within its extent, where the updated value remains the mean of all the updates.
+By such iterative updating, we have more representative scene knowledge regarded to object tracking. The entry/exit area may gradually shift to where most objects actually enter and exit, where the perpendicular width of each topic also better fits the object statistics. The entire process is described in Algorithm \ref{alg:semantic-tracker}.
+
+\begin{algorithm}
+ \caption{Tracking with semantic knowledge.}\label{alg:semantic-tracker}
+ % \KwData{$K$ visual topics, corresponding entry/exit area and direction.}
+ \begin{algorithmic}[1]
+ \For{each frame $t$} 
+     \State topic model inference on the frame.
+ \For{each object $O$}
+     \State get topic assignment $O_k$.
+     \State track object, with result $O_{\bm{r}}$
+    \If{in extended tracking phase} 
+        \If{$S_{\text{extend}}(O_{\bm{r}}, O_k, t) <=\sigma_{4}$}
+            \State exit object.
+%             update semantic scene\;
+        \EndIf
+    \ElsIf{$S_{\text{track}}(O_{\bm{r}}, k, t)<\sigma_{3}$} 
+            \State discard objec.
+    \EndIf
+     \If{$S_\text{exit}(O_{\bm{r}}, O_k) > \sigma_2$} 
+         \State enter extended tracking phase.
+     \EndIf
+ \EndFor
+ \For{each bounding box candidate $r$}
+  \If{$S_\text{entry}(O_{\bm{r}}, k) > \sigma_{1}$ for a topic $k$}
+   \State initialize object.
+   \EndIf
+ \EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}

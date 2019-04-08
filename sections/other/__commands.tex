@@ -1,6 +1,17 @@
 % Use this file to include custom commands...
-\newcommand{\NumberOfRamonesMembers}{8\xspace}
-\newcommand{\NumberOfRamonesAlbums}{14\xspace}
+\makeatletter
+\DeclareRobustCommand{\etc}{%
+    \@ifnextchar{.}%
+        {etc}%
+        {etc.\@\xspace}%
+}
+\makeatother
 
-\newcommand{\RTR}{Rocket to Russia\xspace}
-\newcommand{\EOFC}{End of the Century\xspace}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\arctantwbo}{arctan2}
+\mathchardef\mhyphen="2D
+\newcommand{\etal}{\textit{et al}.}
+\newcommand{\ie}{\textit{i}.\textit{e}.}
+\newcommand{\eg}{\textit{e}.\textit{g}.}
+\newcommand{\rpm}{\sbox0{$1$}\sbox2{$\scriptstyle\pm$}
+  \raise\dimexpr(\ht0-\ht2)/2\relax\box2 }

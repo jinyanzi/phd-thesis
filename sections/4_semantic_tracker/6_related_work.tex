@@ -1,0 +1,16 @@
+% prior work that is competing, or even may be perceived to be similar by reviewers (similar names, let’s say). Mention most references only by group, like “group A [X, Y, Z, W] addresses problem 1”, then at the end of describing each group or individual piece of work, try to contrast your work against it in one sentence. “By contrast, our method does not assume independence."
+
+\label{sec:semantic-related}
+% Human input fr surveillance tracker
+To ensure the accuracy for practical use, most surveillance system heuristically relies on prior knowledge, such as a specific deployment of the cameras or human input. For example, by calibration with know camera specifications, \cite{cheng2011intelligent,corral2017slot} restores the real-world coordinates and infers the actual measurement of the tracked objects. Another type of work requires the area of interest for the tracked objects in advance, such as entry/exit area in \cite{tamersoy2009robust,rodriguez2010adaptive,mishra2013video}, and a skeleton of the road surface in \cite{bas2007automatic}. None of the above methods is easy to apply to new camera settings.
+
+% scene learning: motion pattern and semantic areas.
+To understand the scene in the videos, current work either learns the semantic areas or motion patterns. The former such as \cite{tung2011goal,nedrich2013detecting,yang2012multi} learn the entry/exit areas from the trajectories already available or on-the-fly. Such methods require robust trajectories, which may not be always available in practical use.
+On the contrary, the latter \cite{wang2009unsupervised,kuettel2010s,hospedales2009markov,liao2015video} statistically learn the motions from the quantized optical flow, without knowledge of the actual objects in the scene, therefore, are more robust and flexible. 
+
+% semantic tracking.
+On the other hand, some researchers are working on the semantic aided tracking. \cite{zhao2012tracking,kratz2010tracking} use motion information to constrain the movement of the tracked objects, however, they are only for crowded scenes, since single object-trackers prefer appearance-based features.
+There are also work exploring scene evidence from trajectories: either from existing trajectories \cite{song2010online} or hand-drawn artificial trajectories \cite{manen2014appearances}. However, reliable trajectories still remains an issue for real-world application.
+
+Despite the robust results in Bayesian motion learning, few work has extended them to vehicle tracking.
+Zhao \etc \cite{zhao2013counting} applies \cite{wang2009unsupervised} to vehicle counting. However, we still lack a general component for automatic initialization/termination to fit in the current tracking framework.

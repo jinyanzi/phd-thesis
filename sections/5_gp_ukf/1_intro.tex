@@ -1,0 +1,13 @@
+\section{Introduction}
+\label{sec:gp-ukf-intro}
+
+The basic assumption in \S\ref{sec:tracker-kf} is that vehicles follow the constant acceleration model in a short period, like in the physical world.
+However, everything the scene experiences distortion under projection in most traffic videos. Therefore, vehicles' movement does not follow the linear model in \ref{eq:linear-model}, and a linear state model is insufficient for the Kalman Filter to capture the movement pattern of the vehicles in the scene.
+
+When good observations are available consistently, the Kalman filter is able to follow the tracked vehicle, even though the linear model cannot accurately reflect the size and velocity change. 
+With missing observation or occlusion, the tracker is expected to make prediction with its internal model in the \emph{extrapolation} mode. 
+However, with the linear model broken, the tracker can only generate reasonable results for a short period.
+
+To tackle this problem, we proposed an \gls{ukf} tracker, which learns a non-linear model from the history trajectories by \gls{gp}. 
+The semantic knowledge is the prerequisite of the non-linear model, which ensures the trajectories of a high quality.
+Under the constraints of semantic learning, every vehicle that survives to the exit hotspot is consistent with its motion topic in terms of entry/exit location, size and velocity.

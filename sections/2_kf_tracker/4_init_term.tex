@@ -1,0 +1,54 @@
+\section{Fully Automatic Initialization and Termination}
+\label{sec:tracker-init-term}
+% Tracker initialization is challenging in the vehicle tracker setting. Objects enter and exit the scene in a variety of ways: approach from a distance, enter from the image boundary, appear from behind an occluding object --- moving or stationary, and become visible due to changes in lighting or background conditions. Termination has similar challenges --- vehicles may disappear temporarily behind obstructions or due to changing conditions, they may linger near the edge of the screen, exit the scene while behind a moving vehicle, or disappear slowly into the distance. 
+
+% Many tracking methods in the literature initialization and termination heuristically by manually labeling an entry/exit area beforehand, under the assumption that objects always enter or exit within a certain area, or rely on fully manual initialization. The first method is too simplistic for general purpose vehicle tracking, and the second is impractical. 
+\subsection{Object entry and exit} 
+\label{subsec:tracker-entry-exit}
+
+Currently available datasets usually have tracked objects in the center of the first frame, however, we have initialization more challenging when objects enter the scene in a variety of ways: approach from a distance, enter from the image boundary, appear from behind an occluding object --- moving or stationary, and become visible due to changes in lighting or background conditions. Termination has similar challenges --- vehicles may disappear temporarily behind obstructions or due to changing conditions, they may linger near the edge of the screen, exit the scene while behind a moving vehicle, or disappear slowly into the distance. It is usually natural to terminate tracking when sequence ends or object leaves the scene in short sequences, whereas in practice, it is hard to distinguish between exiting and temporal occlusion when the object is not visible in long-time videos.
+
+As automatic initialization and termination are missing in the majority of current tracking literature, the generally accepted methods either heuristically manually label an entry/exit area beforehand, under the assumption that objects always enter or exit within a certain area, or rely on fully manual initialization. The first method is too simplistic for general purpose vehicle tracking, and the second is impractical under constrained expense/time budget for large-scale use.
+
+%By analyzing our currently available videos across our state from local transportation department, despite the various size changing patterns while objects move in the scene, in most cases, they are composed by two basic cases: expanding and shrinking. With size changing, initialization with incomplete or insufficient appearance would easily result in tracking failure, which is common when object size is expanding; on the other hand, late initialization would result in a short trajectory. Usually surveillance tasks require complete and accurate movement monitoring from video, balance of tracking performance and object lifetime is a necessary problem to consider.
+
+In the only available literature that explicitly addresses the effect of tracker initialization \cite{Wu_2013_CVPR}, the author concludes that slight temporal and spatial variation would result in performance difference. 
+However, unlike the currently available dataset, vehicles frequently encounter significant scale change while leaving or entering the scene in the traffic surveillance videos available to us. This presents a unique problem for initialization, as early initialization would result in a small, poor-quality image, and late initialization results in missing of information due to the short trajectory. Thus, striking the right balance between tracking performance and lifetime is the key to automatic tracker initialization.
+
+% \begin{figure}[!htbp]
+% \centering
+%     \begin{minipage}{0.48\columnwidth}
+%         \includegraphics[width=\linewidth, height=0.6\linewidth]{./img/init_thresh1.pdf} 
+%         \subcaption{Size expanding.}
+%         \label{subfig:sh}
+%     \end{minipage}%
+%     \begin{minipage}{0.48\columnwidth}
+%         \includegraphics[width=\linewidth, height=0.6\linewidth]{./img/init_thresh2.pdf}
+%         \subcaption{Size shrinking.}
+%         \label{subfig:shrink}
+%     \end{minipage}%
+%     \caption{Object movement model. Two basic cases for object entry and exiting. Number under arrow shows the size ratio with respect to the largest size along the sequence. Frame in gray indicates the first frame with a size ratio larger than 0.6.}
+%     \label{fig:entryExist}
+% \end{figure}
+
+\subsection{Our Method}
+Our system initializes new trackers based on unmatched boxes from background subtraction and object detection. This supports the challenging cases described above, but can result in many spurious trackers due to the noisy nature of both background subtraction and optical flow. We use a two-pronged approach to limit such spurious results. First, initialization is limited to objects larger than 10$\times$10 pixels. This reduces the number of trackers in flight, without significant negative effect: 
+cars that could reasonably be captured tend to be larger than that in our videos, except when approaching from or driving toward the vanishing point. 
+% we do not need to start tracking when the object is near the vanishing point, but can do so when the object becomes reasonably large.
+Second, trackers are terminated when the object leaves the frame, after no direct observations (boxes or optical flow) has been made for 50 frames, in other words, in \emph{extrapolation} mode. Any object would have such 50 frames before exit. However, upon termination, tracked objects are validated based on the number of observations and distance traveled. Spurious noise tends to be stationary and short-lived, whereas vehicles typically follow a continuous and long-lived path through the scene. To adapt to the variety of videos and objects, distance threshold is dynamically computed by object size and video resolution. 
+%During the extrapolation of uncertainty for 50 frames, the Kalman filter could still make predictions by the internal state. 
+One good consequence of such scheme is that many early initialized noises are quickly discarded, since usually there is no consistent measurement available for them, while those tiny objects discarded as noises are soon available for future initialization, with better quality. Therefore, real small objects are able to be initialized at the earliest point and survive with a complete trajectory. 
+
+%Initialization and termination has to happen at a right moment. We have to handle the transitional stage where the object is partially visible, when objects enter/exit near frame boundary. We also have to decide whether the box is sufficiently reliable if it is too small. Early initialization may result in partially tracked or drifted objects, while late termination would force the tracker to track background, or even worse, other object around.
+
+%In our system, we initialize trackers as early as possible, except those tiny ones. 
+%Termination is executed if after 50 frames of extrapolation. The advantage of it is that it handles noises and all other exit cases. Correctly tracked objects become extrapolation mode after being out of view; while noises are usually hard to have corresponding foreground boxes or detection results consecutively, therefore, very easy to fall in extrapolation mode. Only objects move long distance in a sufficiently long lifetime would exited normally, otherwise they are removed as noises. In this way, we generate long trajectory while discarding noisy objects.
+
+
+% \textbf{Initialization:} For the first scenario, we have to handle the transitional stage where the object is partially visible. The moment of full entering has to be identified, in order to initialize the tracker with complete object appearance. In the second case, the tiny size carries insufficient information for accurate tracking, tracker initialized at such stage is prone to drift. As for the the last scenario, if the entry area is manually setup, the object may be missed since it becomes visible until being outside the entry area. 
+
+% \textbf{Termination:} Early termination may make the object available for initialization since it is still visible. Late termination forces trackers to keep tracking, possibly background, or even worse, another object nearby. This is common in the last two scenarios.
+
+% In conclusion, initialization and termination has to happen at a right moment. Trackers should begin early and terminate late to cover the object's lifetime as long as possible. However, initialization should begin with sufficient information to make sure of the tracking accuracy, while termination should be performed properly in time.
+% In our system, we initialize trackers as early as possible, except those tiny ones. 
+% Termination is executed if after 50 frames of extrapolation. The advantage of it is that it handles noises and all other exit cases. Correctly tracked objects become extrapolation mode after being out of view; while noises are usually hard to have corresponding foreground boxes or detection results consecutively, therefore, very easy to fall in extrapolation mode. Only objects move long distance in a sufficiently long lifetime would exited normally, otherwise they are removed as noises. In this way, we generate long trajectory while discarding noisy objects.

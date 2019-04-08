@@ -1,0 +1,47 @@
+\section{Gaussian Process}
+\label{sec:gp}
+Gaussian Process is a non-parametric model that learns a distribution over functions $f\sim \mathcal{GP}$.
+Given a dataset 
+$\mathcal{D} = \left\{(\mathbf{x}_i, y_i), \mathbf{x}_i \in \mathbb{R}^d, y \in \mathbb{R}, i=1,\dots, N \right\}$, 
+where $y_{i} = f(\mathbf{x}_i)$, 
+a \gls{gp} assumes a prior distribution that 
+$f(\mathbf{x}_{1}), f(\mathbf{x}_{2}), \dots, f(\mathbf{x}_{N})$ 
+jointly follows a Gaussian distribution $p(\mathbf{f}|\mathbf{X}) = \mathcal{N}(\mathbf{f}|\mathbf{\mu}, \mathbf{K})$
+where $\mathbf{K}_{ij}$ is defined by a kernel function $\mathbf{K}_{ij} = \kappa(\mathbf{x}_i, \mathbf{x}_j)$.
+When $N_{*}$ new data points come, by the definition of GP, the joint distribution is still a Gaussian distribution
+\begin{align}
+\begin{pmatrix} \mathbf{y}\\ \mathbf{f_*}\end{pmatrix} \sim \mathcal{N}\left(
+\begin{pmatrix} \mathbf{\mu} \\ \mathbf{\mu}_{*}\end{pmatrix}, 
+\begin{pmatrix} \mathbf{K} && \mathbf{K}_*\\ \mathbf{K^T}_* && \mathbf{K}_{**}\end{pmatrix}
+\right),
+\end{align}
+where $\mathbf{K}=\kappa(\mathbf{X}, \mathbf{X})$ is $N\times N$, $\mathbf{K}_*=\kappa(\mathbf{X}, \mathbf{X}_*)$ is $N\times N{*}$, and $\mathbf{K}_{**}=\kappa(\mathbf{X}_*, \mathbf{X}_*)$ is $N_*\times N_*$.
+
+By the conditioning Gaussian \cite{rasmussen2003gaussian}, the posterior is $p(\mathbf{f}_*|\mathbf{X}, \mathbf{X}_*, \mathbf{y}) = \mathcal{N}(\mathbf{f}_*|\mathbf{\mu}_*, \mathbf{\Sigma}_*)$, where
+\begin{align}
+\mathbf{\mu}_* & = \mathbf{\mu(X_*)} + \mathbf{K}^T_*\mathbf{K}^{-1}(\mathbf{y-\mu(X)})\\
+\mathbf{\Sigma}_* & = \mathbf{K_{**}-K_*^TK^{-1}K_*}
+\label{eq:gp-predict}
+\end{align}
+
+For regression task, we can use $\mathbf{\mu}_*$ for the prediction.
+Usually we assume $\mathbf{\mu(X)} = 0, \mathbf{\mu(X)}_* = 0$. The \gls{rbf} kernel is used here
+\begin{align}
+\kappa(\mathbf{x}_i, \mathbf{x}_j) = \sigma_f^2 \exp\left(-\frac{1}{2l^2}(\mathbf{x}_i-\mathbf{x}_j)^2\right),
+\end{align}
+where $\sigma_{f}$ and $l$ are hyper parameters of the GP.
+
+\subsection{Multiple Output Gaussian Process}
+
+In our case, ideally we want to learn a scene-specific motion model, which is a mapping of vehicle states between two consecutive frames. 
+The history trajectories provide such mapping for training. 
+Different with \S\ref{sec:tracker-kf}, each data point $\mathbf{x}$ is the internal state $[x, y, w, h, x', y']$, 
+representing the location, size and velocity of vehicle. 
+Each dimension of the output $\mathbf{y}$ exactly matches the input, since it will be the input for the next time step.
+In \S\ref{sec:gp}, $y$ is a real value, while here it is extended to multiple output \gls{gp}, where $\mathbf{y} \in \mathbb{R}^{4}$. 
+Despite the different output dimension, the \gls{gp} is trained jointly over all the dimensions and the prediction for regression is the same with \ref{eq:gp-predict}, equivalent to the case that each dimension of the output is independent.
+
+\subsection{Online Processing for Streaming Data}
+
+
+

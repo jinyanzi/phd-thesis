@@ -1,0 +1,36 @@
+\section{Introduction}
+\label{sec:tracker-intro}
+
+Vehicle tracking has important applications in traffic engineering.
+Over time, a number of vehicle counting methods have been developed, including specialized hand-held counting boards with buttons to push, pressure tubes laid across the pavement, magnetic loops under the pavement 
+\cite{klein2006traffic,mimbela2000summary},
+video-based lane occupancy detectors, 
+and more. Overall, the most powerful techniques rely on manual input and tend to be extremely labor intensive, whereas the mostly automatic techniques lack in accuracy and descriptiveness.
+In principle, computer vision provides the most scalable and economical alternative. Ideally, a fully automatic computer vision-based tracker follows each vehicle as it enters, traverses and exits the scene.
+% In principle, computer vision promises an alternative that is both highly descriptive and fully automatic, using existing, arbitrary-perspective traffic surveillance video. 
+%By automatically following each vehicle as it enters, traverses and exits the scene, then classifying the resulting trajectory, a computer vision system could in principle count an arbitrary number of vehicle movements, on a continuous basis, at very low cost.
+However, current tracking algorithms such as \cite{henriques2015high,vojir2014robust,hare2011struck,possegger2015defense} all require initialization as input, leading to semi-automatic tracking systems. To avoid manual input, these trackers rely on background subtraction and/or object detectors for initialization. Here, the primary challenge is robustness to variations in illumination condition, viewpoint, and video quality. Background subtraction model could fail with illumination change, while detectors are not appropriate for detecting a vehicle in the distance, or in a grainy low-resolution video, as our experiments demonstrate. Additionally, the low throughput of most trackers prevents widely deployed surveillance applications, as VOT 2016 challenge reports that none of the top-ranked trackers run in real-time for even a single tracked object.
+
+% The primary challenge is robustness to variations in viewpoint and video quality. Current work on object tracking \cite{henriques2015high, vojir2014robust, hare2011struck, possegger2015defense}, generally assume that initialization is provided. That is, one of the inputs to the tracker is the initial location and extent of the object to be tracked. General purpose, automatic initialization is not well covered in the literature, however an object detector can be used in its place. In our experience with one state-of-the-art detector \cite{renNIPS15fasterrcnn}, this approach works best with a clear, high-resolution view of the object. Thus, current detectors are not appropriate for detecting vehicle in the distance, in a grainy low-resolution video. Many similar challenges apply to other isolated approaches to object tracking in this context. 
+
+We propose a fully automatic algorithm for vehicle tracking that runs faster than real-time. With a sensor fusion approach, we combine background segmentation, object detection, and optical flow into a single, robust vehicle tracking system via Kalman filtering. Initialization uses the same three sources, to automatically identify moving objects in the scene. Finally, when an object exits the scene, its movements are analyzed to filter out unlikely object trajectories. To evaluate our algorithm as well as prior work, we create a hand-annotated dataset, consisting of 11 diverse, 5-minute videos collected from existing traffic surveillance cameras. For each frame, the location and extent of each moving object is provided, which enables accurate, quantitative evaluation.
+
+We compare the proposed algorithm against multiple state-of-the-art trackers, which rely on human input for initialization.
+On this dataset, we report considerably better performance than the state of the art with manual initialization, and substantial accuracy improvement when using our new automatic initialization method. Moreover, we demonstrate throughput 4$\times$ faster than real time and over 5$\times$ improvement compared to 5 out of 7 several baseline trackers, up to 47$\times$. 
+
+%The primary contributions of this paper are summarized as follows:
+%\begin{itemize}
+%   \setlength\itemsep{0pt}
+%   \setlength{\parskip}{3pt}
+%   \item Robust automatic tracker initialization and termination.
+%   \item Efficient framework to integrate optical flow, background subtraction model and object detector for automatic vehicle tracking.
+%   \item Public release of fully annotated traffic video dataset containing 11 real-world videos with different views, resolutions, illumination conditions and vehicle interactions, plus source code for our vehicle tracking system, to be released upon publication. 
+%   \item Thorough evaluation on each component of our framework and comparison with a state-of-the-art object tracker. 
+%\end{itemize}
+
+
+%Our paper is organized as follows: \S\ref{s:preliminary} illustrates several common vision techniques used in tracking. with detailed example we demonstrate that none of those methods are practically reliable under real-world conditions, however, complimentary in some sense. \S\ref{s:method} describes our sensor fusion method that combines three unrealiable into a robust system, with stress that tracker initialization and termination should be carefully dealt with. Fianlly, in \S\ref{s:evaluation} we present comprehensive evaluation, extensively on our ready-to-release video dataset with complex adversarial conditions. By comparison with sveral state-of-the-art trackers, our fully automatic tracker shows substantial performance improvement and huge potential for scalable use in traffic engineering.
+
+
+%Object tracking has been studied in computer vision field for decades with great progress most recently. However, there is still gap between algorithms and real world applications. Researchers often simplifies some conditions to better focus on a certain problem, while practical systems have to take every component in the work flow into account. As an inevitable step for tracking, initialization is seldom explicitly addressed in current literature. Different with manual labeling in standard tracking evaluation, people use background subtraction and object detector to initialize trackers automatically in real world systems. Although these components are usually assumed perfect in literature, exceptions do exist in reality. Background subtraction fails with illumination change and occlusion, while object detector usually has missing and false detections.
+%Besides source of initialization, we argue that the moment of tracker initialization and termination is key to the performance. We want an accurate trajectory as long as possible, while accuracy and coverage in time is contradictory sometimes.

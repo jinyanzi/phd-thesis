@@ -1,0 +1,9 @@
+\section{Object Motion Assignment by Online Inference}
+\label{sec:semantic-inf}
+
+After learning the semantic knowledge for visual topics, we have to identify the topic assignment of a tracked object before any topic-specific constraints could be applied.
+We used the off-line trained topic model to do inference on newly come videos for the same camera. For inference on a certain frame, first a small window of consecutive frames close to the current one is chosen and processed into bag-of-words representation, same with training videos in Section \ref{subsec:hdp-bag-of-words}.  
+After inference, each word has a multinomial distribution over topics, and it is assigned to the one with maximal probability. 
+Assume that those frames contain consistent motions, we pick the most likely topic for each location. 
+For a tracked object covering multiple grids, we simply use majority voting for each object within its extent to get its topic assignment.
+We omit the inference detail here, for details we refer the reader to \cite{yee2006hierarchical}.

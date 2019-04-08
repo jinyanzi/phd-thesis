@@ -1,0 +1,76 @@
+\section{Introduction}
+\label{sec:scene-intro}
+
+%  P1 background & motivation. “As traffic cameras become more prevalent…”
+%  P2 related work “Earlier efforts in this direction have…”
+%  P3 our work “We present … ” followed by “Our primary contributions are as follows: “
+%   - bulleted list
+%  P4 eval: “Our evaluation on datasets/benchmarks X, Y, Z, demonstrates…”
+%  P5 outline: “The remainder of this paper is structured as follows…"
+%%%%%%% Vision application requires human input, not automatic enough. %%%%%%% 
+Transportation videos are nowadays captured by millions of cameras installed at local and national highways and streets\footnote{The Illinois Department of Transportation has a huge database of 24-hour traffic videos all across Illinois.}.
+The analysis of such videos are critical for traffic volume monitoring, peak hour and congestion patterns discovery, tracing cars of criminals and stolen cars, highway toll management, among many others.
+For decades people have been trying to extract information from transportation surveillance videos.
+For example, one can hire a large number of human workers to watch and mark up any subregions, frames, or clips, that contain information of interest.
+This practice is labor-intensive and not scalable,
+as the workers need to pause from time to time and carefully analyze each individual object frame-wise.
+Even with high detection precision, recall can be low due to the bottleneck inexpensive human labor and processing bandwidth.
+
+%One can map the image to the real-world coordinates either by optical geometry or hand-annotated metrics. 
+%With camera specifications or hand-annotated measurements, real-world coordinates, such as vehicle height and width \cite{cheng2011intelligent} or traffic statistics \cite{corral2017slot}, can be restored.
+%While most methods directly work on the image coordinates, with some predefined semantic representation, either as input or constraints, surveillance tasks such as vehicle tracking and counting \cite{lessard2016countingapp} could be completed.
+% list a few key papers here:
+
+%%%%%%% Vision application requires human input, not automatic enough. %%%%%%% 
+Recently, advanced solutions based on computer vision
+are proposed to mitigate the bottleneck
+but are still limited by human processing bandwidth and far away from a fully automatic traffic surveillance.
+% First, the learning-based computer vision algorithms require many hours of labeled data for model training.
+First, while precise specifications of capturing camera or the starting and ending points play a large role in tracking accuracy \cite{yanziVehicleTracker,tamersoy2009robust,rodriguez2010adaptive,mishra2013video,cheng2011intelligent,corral2017slot}, 
+the videos are time-consuming to hand-labeled accurately with this level of details,
+while given a large number of cameras deployed nationwide, it is unwise to provide specifications for every camera.
+%Although there are studies on entry/exit extraction \cite{tung2011goal, intawong2015detection, nedrich2013detecting}, and motion pattern learning \cite{wang2009unsupervised, kuettel2010s, hospedales2009markov}, with applications such as abnormality detection and semantic query, the application of 
+%
+Second,
+any models trained for one scene cannot be deployed in other scenes,
+as the semantics of surveillance scenes, such as entry/exit area \cite{tamersoy2009robust,rodriguez2010adaptive} or road surface \cite{bas2007automatic}, can differ from scene to scene. 
+Also, the same camera can undergo slight adjustments in their focus and angle, and a model trained for that camera can become inaccurate and incur further costly re-calibrations.
+%More generally, a model trained on labeled data from one camera can't be used to surveillance videos from another camera.
+% , or to simply generalize models trained on a few cameras to all other cameras.
+% DELETE COMMENT: Our method also needs training for each camera.
+
+%%%%%%% Need hands-off real-time tracking without manual initialization and termination. %%%%%%% 
+% Lastly but not the least, even after a model is trained and deployed,
+% during real-time and non-stop surveillance while the videos streaming in,
+% any dependency on human input for such knowledge will bottleneck a tracking model with the bandwidth of the human data processing.
+% DELETE COMMENT: The prior knowledge is offline learned or set, we don't need to provide it again in real time processing once the system is set up.
+
+%Last but not least, the manual annotation is not easily measured.
+%Human's perception of the captured videos may greatly vary due to personal difference or concentration, which directly affect the annotation quality.
+%the obtained semantic knowledge is still quite limited.
+
+% start writing your own method.
+In this paper, we aim at fully automatic semantic knowledge extraction from transportation videos and
+significantly reduce human efforts in the vehicle tracking pipeline.
+A vehicle tracker can benefit from the more restricted motion patterns in traffic videos and we 
+propose a video scene semantic learning method to discover atomic motions, extent of active regions,
+entry/exit hotspots, \etc..
+We integrate the learned semantic knowledge into a tracker based on Kalman Filter,
+which can flexibly accommodate state-of-the-art object detectors like faster-RCNN~\cite{renNIPS15fasterrcnn}.
+Experiments on 13 long surveillance videos with diverse tracking scenes demonstrate the significantly improved tracking accuracy attained the proposed method, compared with other fully automatic approaches.
+
+%%%%%%% Need apply scene learning to visual application %%%%%%% 
+
+%%%%%%% Our solution %%%%%%% 
+\setlist{nolistsep}
+Our preliminary contributions are as follows:
+\begin{itemize}%[noitemsep]
+    % \setlength\itemsep{0em}
+    \item Explicitly addressed those critical yet ignored issues for practical surveillance applications, such as automatic initialization and termination.
+    \item Proposed a self-adaptive framework to where trackers are guided by the learned semantic scene knowledge, while in return the semantic knowledge is updated with tracking statistics.
+    \item Provided a comprehensive evaluation of the proposed framework and demonstrate an significant improvement on object tracking.
+\end{itemize}
+
+%This paper is organized as follows: In Section \ref{sec:background}, we discuss the driving motivation of scene learning for surveillance applications. Section \ref{sec:sceneLearning} describes our method for extracting scene features from videos, which are subsequently used as prior knowledge to enhance tracking performance. In Section \ref{sec:evaluation}, we provide a comprehensive evaluation of both the learned scene knowledge and semantic knowledge aided tracker, which shows the learned semantic knowledge brings a big improvement to tracking frameworks. At last, we discuss some existing methods on surveillance vision application and scene learning in Section \ref{sec:related}. 
+
+%\textcolor{red}{need to address scene update, shift the paper focus from tracking to scene understanding.}
