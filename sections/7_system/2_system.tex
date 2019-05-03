@@ -1,11 +1,20 @@
 \section{Vehicle Counter}
 \label{sec:system-counter}
 
-In collaboration with \gls{idot}, we want to have the vehicle counting statistics as the final results. To get the  vehicle counts along different motions, we also need to know the motions available in each video. 
+After the tracking process finishes, the number of trajectories is regarded as vehicle counts.
+However, the current traffic statistics of \gls{idot} contains specific vehicle counts on different directions. 
+To match the format of the existing reports, not only we have to obtain the total number of vehicles, each vehicle has to be correctly classified to its corresponding motion.
+Consequently, vehicle movements have to be available apart from the tracking results.
+With different tracking strategy, motions are obtained differently: with our heuristic tracker, we rely on human annotated input; however, with the semantic tracker, we learn the motion offline by unsupervised learning.
 
 \subsection{Vehicle Counter with Human Annotation}
-Initially, we build a GUI interface and ask the user to draw a few line segments to indicate a motion template. \ref{fig:anno-gui} is the screen shot of the interface, where the motion templates mostly align with the road surface but may have more than one for each road. 
-\ref{fig:kf-counter} shows our first counter framework without semantic knowledge. The vehicle tracker will generate a set of vehicle trajectories, by assigning each trajectory to a motion template and increase the corresponding count, we can obtain the final traffic count. 
+Initially, users upload videos via FTP and operated on our GUI interface by remote desktop.
+Our GUI interface and require the user to draw a few line segments as the templates of the vehicle motion.
+\ref{fig:anno-gui} is the screen shot of the interface, where the motion templates mostly align with the road surface. 
+However, a road may have more than one motion due to potential multiple lanes. 
+\ref{fig:kf-counter} shows our first counter framework with the heuristic tracker. 
+The tracker generates a set of vehicle trajectories, then each trajectory is assigned to a motion template that mostly matches its movement. 
+By increasing the count of each vehicle's assigned motion template, we can obtain the final traffic count of each movement. 
 
 Suppose we have a set of $n$ motion templates $\mathbf{T} = \{\mathbf{T}_1, \mathbf{T}_2, \dots, \mathbf{T}_n\}$ and a set of trajectories of $N$ vehicles $\Omega= \{\mathbf{O}_1, \mathbf{O}_2, \dots, \mathbf{O}_N\}$.
 
