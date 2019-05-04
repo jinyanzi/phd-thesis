@@ -1,4 +1,4 @@
-\section{Fully Automatic Initialization and Termination}
+\section{Fully automatic initialization and termination}
 \label{sec:tracker-init-term}
 % Tracker initialization is challenging in the vehicle tracker setting. Objects enter and exit the scene in a variety of ways: approach from a distance, enter from the image boundary, appear from behind an occluding object --- moving or stationary, and become visible due to changes in lighting or background conditions. Termination has similar challenges --- vehicles may disappear temporarily behind obstructions or due to changing conditions, they may linger near the edge of the screen, exit the scene while behind a moving vehicle, or disappear slowly into the distance. 
 
@@ -31,13 +31,15 @@ However, unlike the currently available dataset, vehicles frequently encounter s
 %     \label{fig:entryExist}
 % \end{figure}
 
-\subsection{Our Method}
+\subsection{Our method}
 Our system initializes new trackers based on unmatched boxes from background subtraction and object detection. This supports the challenging cases described above, but can result in many spurious trackers due to the noisy nature of both background subtraction and optical flow. We use a two-pronged approach to limit such spurious results. First, initialization is limited to objects larger than 10$\times$10 pixels. This reduces the number of trackers in flight, without significant negative effect: 
 cars that could reasonably be captured tend to be larger than that in our videos, except when approaching from or driving toward the vanishing point. 
 % we do not need to start tracking when the object is near the vanishing point, but can do so when the object becomes reasonably large.
 Second, trackers are terminated when the object leaves the frame, after no direct observations (boxes or optical flow) has been made for 50 frames, in other words, in \emph{extrapolation} mode. Any object would have such 50 frames before exit. However, upon termination, tracked objects are validated based on the number of observations and distance traveled. Spurious noise tends to be stationary and short-lived, whereas vehicles typically follow a continuous and long-lived path through the scene. To adapt to the variety of videos and objects, distance threshold is dynamically computed by object size and video resolution. 
 %During the extrapolation of uncertainty for 50 frames, the Kalman filter could still make predictions by the internal state. 
 One good consequence of such scheme is that many early initialized noises are quickly discarded, since usually there is no consistent measurement available for them, while those tiny objects discarded as noises are soon available for future initialization, with better quality. Therefore, real small objects are able to be initialized at the earliest point and survive with a complete trajectory. 
+
+Algorithm \ref{alg:heuristic-tracker} to \ref{alg:heuristic-tracker-entry}gives the pseudo code for our method. Since it is uses heuristic criteria for initialization and termination, we call it the heuristic tracker.
 
 %Initialization and termination has to happen at a right moment. We have to handle the transitional stage where the object is partially visible, when objects enter/exit near frame boundary. We also have to decide whether the box is sufficiently reliable if it is too small. Early initialization may result in partially tracked or drifted objects, while late termination would force the tracker to track background, or even worse, other object around.
 
@@ -52,3 +54,50 @@ One good consequence of such scheme is that many early initialized noises are qu
 % In conclusion, initialization and termination has to happen at a right moment. Trackers should begin early and terminate late to cover the object's lifetime as long as possible. However, initialization should begin with sufficient information to make sure of the tracking accuracy, while termination should be performed properly in time.
 % In our system, we initialize trackers as early as possible, except those tiny ones. 
 % Termination is executed if after 50 frames of extrapolation. The advantage of it is that it handles noises and all other exit cases. Correctly tracked objects become extrapolation mode after being out of view; while noises are usually hard to have corresponding foreground boxes or detection results consecutively, therefore, very easy to fall in extrapolation mode. Only objects move long distance in a sufficiently long lifetime would exited normally, otherwise they are removed as noises. In this way, we generate long trajectory while discarding noisy objects.
+
+\begin{algorithm}
+ \caption{Heuristic tracker.}
+ \label{alg:heuristic-tracker}
+ \begin{algorithmic}[1]
+ \For{each frame $t$} 
+     \State Obtain foreground boxes $\mathbf{R}_{bg} = \{\bm{r}_{bg}\}$.
+     \State Obtain detection boxes $\mathbf{R}_{det} = \{\bm{r}_{det}\}$.
+     \For{each $i$ th object $O_i$ at $\bm{r}_{t-1}(i), \quad(i = 1, \dots, N_t)}$
+         \State Find the most matched boxes $\bm{r}_{bg}(i)$ and $\bm{r}_{det}(i)$ with $\bm{r}_{t-1}(i)$.
+         \State Compute mean velocity $\bm{v}(i)$ within $\bm{r}_{t-1}(i)$ from the optical flow.
+         \If{$\bm{v}(i) = 0$ or neither $\bm{r}_{bg}(i)$ or $\bm{r}_{det}(i)$ exists} 
+            Enter extrapolation mode.
+         \Else
+            \State $\mathbf{R}_{bg} = \mathbf{R}_{bg}\setminus\bm{r}_{bg}(i), \mathbf{R}_{det} = \mathbf{R}_{det}\setminus\bm{r}_{det}(i).$ 
+             \State Make measurement for tracking update $\bm{z}_t(i) = [\bm{r}_{bg}(i), \bm{r}_{det}(i), \bm{v}(i)]$.
+             \State Set measurement covariance error $R$.
+             \State Update object tracker with $\bm{z}_t(i)$ and $R$, get result $\bm{r}_{t}(i)$.
+         \EndIf
+         \State CheckExitHeuristic$(O_i)$
+     \EndFor
+     \For{each remaining box candidate $r\in\{\mathbf{R}_{bg}\bigcup\mathbf{R}_{det}\}$}
+      \State CheckEntryHeuristic$(\bm{r})$.
+     \EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+ \caption{CheckExitHeuristic$(O)$}
+ \label{alg:heuristic-tracker-exit}
+ \begin{algorithmic}[1]
+    \If{Object $O$ is in extrapolation mode more than 50 frames} 
+      \State exit object $O$.
+    \EndIf
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+ \caption{CheckEntryHeuristic$(\bm{r})$}
+ \label{alg:heuristic-tracker-entry}
+ \begin{algorithmic}[1]
+    \If{$r$ is larger than $10\times10$}
+      \State initialize object.
+    \EndIf
+\end{algorithmic}
+\end{algorithm}

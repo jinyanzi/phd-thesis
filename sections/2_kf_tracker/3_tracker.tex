@@ -1,4 +1,4 @@
-\section{Vehicle Tracker by Kalman Filter}
+\section{Heuristic tracker by Kalman Filter}
 \label{sec:tracker-kf}
 
 \input{img/kf_tracker}
@@ -34,8 +34,10 @@ There is also measurement $\mathbf{z}\in \mathbb{R}^{m}$ formulated as
 \end{equation}
 Here $H$ is the measure model, which observation to correct prediction from previous step. $\mathbf{w}_t$ in \ref{eq:kf-transition} and $\mathbf{v}_t$ in \ref{eq:kf-measurement} are process and measurement noise respectively. They are assumed independent of each other and zero-mean Gaussian, with $Q$ and $R$ as process noise covariance and measurement noise covariance, respectively.
 \begin{align}
+\begin{split}
 p(\mathbf{w})\sim \mathcal{N}(0, Q)\\
 p(\mathbf{v})\sim \mathcal{N}(0, R)
+\end{split}
 \end{align}
 The recursive process of Kalman filter contains two steps: time update (prediction) and measurement update (correction). Both steps are applied at time $k$, indicated by subscripts below.
 For such a continuous system, we define a time unit $dt$, which is the time interval we perform an update, in our case, the time between two consecutive frames. Each variable has its own value at a certain time step $t$, indicated by the subscript. The prediction is performed as follows: 
@@ -43,8 +45,11 @@ For such a continuous system, we define a time unit $dt$, which is the time inte
 % \setlength{\belowdisplayskip}{2pt}
 % \noindent\textbf{Prediction:}
 \begin{align}
-\mathbf{\hat{x}}^{\mhyphen}_t & = A\mathbf{\hat{x}}_{t-1} \label{eq:linear-model} \\%+ B\mathbf{u_{k-1}} \label{eq:predictState}\\
-P^\mhyphen_t & = AP_{t-1}A^T + Q \label{eq:predict_noisecov_pre}
+\begin{split}
+\mathbf{\hat{x}}^{\mhyphen}_t & = A\mathbf{\hat{x}}_{t-1}\\
+P^\mhyphen_t & = AP_{t-1}A^T + Q 
+\end{split}
+\label{eq:kf-predict}
 \end{align}
 
 Here $\mathbf{\hat{x}}_{t-1}$ and $\mathbf{\hat{x}}^{\mhyphen}_t$ are internal states before and after prediction at time $t$. $P_{t-1}$ and $P^\mhyphen_t$ are prior and post error covariances, and $Q$ is the process noise covariance. In our case, we define 
@@ -55,16 +60,22 @@ The dynamic model $A$ is defined based on the physics equation of displacement w
 % \setlength{\abovedisplayskip}{2pt}
 % \setlength{\belowdisplayskip}{2pt}
 \begin{align}
-  x_t & = x_{t-1} + x'_{t-1}\cdot dt+\tfrac{1}{2}\cdot x''_{t-1}\cdot dt^2 \label{eq:x}\\
-  y_t & = y_{t-1} + y'_{t-1}\cdot dt+\tfrac{1}{2}\cdot y''_{t-1}\cdot dt^2 \label{eq:y}\\
-  x'_t & = x'_{t-1} + x''_{t-1}\cdot dt \label{eq:xp}\\
-  y'_t & = y'_{t-1} + y''_{t-1}\cdot dt \label{eq:yp}.
+\begin{split}
+  x_t & = x_{t-1} + x'_{t-1}\cdot dt+\tfrac{1}{2}\cdot x''_{t-1}\cdot dt^2\\
+  y_t & = y_{t-1} + y'_{t-1}\cdot dt+\tfrac{1}{2}\cdot y''_{t-1}\cdot dt^2\\
+  x'_t & = x'_{t-1} + x''_{t-1}\cdot dt\\
+  y'_t & = y'_{t-1} + y''_{t-1}\cdot dt.
+\end{split}
+\label{eq:motion-model-r}
 \end{align}
 
 For width and height, we instead assume constant growth rate within $dt$, thus
 \begin{align}
-  w_t & = w_{t-1} + w'_{t-1}\cdot dt \label{eq:w}\\
-  h_t & = h_{t-1} + h'_{t-1}\cdot dt \label{eq:h}
+\begin{split}
+  w_t & = w_{t-1} + w'_{t-1}\cdot dt\\
+  h_t & = h_{t-1} + h'_{t-1}\cdot dt
+\end{split}
+\label{eq:motion-model-v}
 \end{align} 
 
 % . In our case, we use a constant acceleration movement model; $B$ is a control-input model, but not used here. $H$ is a measurement model, mapping measurements to the states in $\mathbf{\hat x}$. Finally, $Q$ and $R$ are process noise covariance and measurement noise covariance, respectively.
@@ -76,9 +87,12 @@ For width and height, we instead assume constant growth rate within $dt$, thus
 % \textbf{Correction:}
 After prediction, the estimated state $\mathbf{\hat{x}^{\mhyphen}_t}$ is corrected by an observed measurement $\mathbf{z}$ at each time step by the steps below: 
 \begin{align}
-K_t & = P^{\mhyphen}_t H^T(HP^{\mhyphen}_t H^T+R)^{-1} \label{eq:predict_gain}\\
-\mathbf{\hat{x}_t} & = \mathbf{\hat{x}^{\mhyphen}_t} + K_t(\mathbf{z_t} - H\mathbf{\hat{x}^{\mhyphen}_t)} \label{eq:correct} \\
-P_t & = (I-K_tH)P^{\mhyphen}_t \label{eq:predict_noise_cov_post}
+\begin{split}
+K_t & = P^{\mhyphen}_t H^T(HP^{\mhyphen}_t H^T+R)^{-1}\\
+\mathbf{\hat{x}_t} & = \mathbf{\hat{x}^{\mhyphen}_t} + K_t(\mathbf{z_t} - H\mathbf{\hat{x}^{\mhyphen}_t)}\\
+P_t & = (I-K_tH)P^{\mhyphen}_t
+\end{split}
+\label{eq:kf-correct}
 \end{align}
 
 In our case, we have a 10-dimensional measurement vector: 
@@ -116,8 +130,8 @@ Finally we use the mean of the remaining flow vectors on horizontal and vertical
 %% \end{figure}
 \subsection{Model update}
 
-The measurements above are directly plugged into \ref{eq:correct}, however, are of different quality, and oftentimes some of the measurements are missing entirely. For example, the invalid foreground is generated when occlusion happens; detector misses a small-sized object, or aperture problem gives zero movement of object.
-We address these problems by varying the measurement noise covariance accordingly, which in turn causes the Kalman filter to choose a gain $K$ that maximizes the quality of the internal state. Recall in \ref{eq:predict_gain}, a large measurement covariance $Q$ would result in a smaller $K$, therefore the measurement weights less in correction. When a measurement is missing, we use the value already in $\mathbf{\hat x}$ as a proxy, and set the covariance to $\infty$. Consequently, once none of the three measurements is available, the tracker merely relies on the internal prediction, which we call \emph{extrapolation}. The tracker could still generate tracking results by the internal linear model during extrapolation. The other two cases in \ref{fig:kf-tracker-workflow} are when at least one bounding box is available (bound update) or only optical flow is obtained (velocity update).
+The measurements above are directly plugged into \ref{eq:kf-correct}, however, are of different quality, and oftentimes some of the measurements are missing entirely. For example, the invalid foreground is generated when occlusion happens; detector misses a small-sized object, or aperture problem gives zero movement of object.
+We address these problems by varying the measurement noise covariance accordingly, which in turn causes the Kalman filter to choose a gain $K$ that maximizes the quality of the internal state. Recall in \ref{eq:kf-correct}, a large measurement covariance $Q$ would result in a smaller $K$, therefore the measurement weights less in correction. When a measurement is missing, we use the value already in $\mathbf{\hat x}$ as a proxy, and set the covariance to $\infty$. Consequently, once none of the three measurements is available, the tracker merely relies on the internal prediction, which we call \emph{extrapolation}. The tracker could still generate tracking results by the internal linear model during extrapolation. The other two cases in \ref{fig:kf-tracker-workflow} are when at least one bounding box is available (bound update) or only optical flow is obtained (velocity update).
 
 We also apply error gating to the background subtraction and object detection measurements. %We assign measurements different weights for update by manipulating the measurement covariance. 
 For example, foreground bounding box that is well overlapped with tracked objects (more than $30\%$ overlap) has a higher confidence than those with other bounding boxes around. Similarly, optical flow have a lower confidence with zero value on both directions, since we have no idea whether the object is still or the aperture problem happens.

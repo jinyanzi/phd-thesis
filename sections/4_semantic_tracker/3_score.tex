@@ -1,6 +1,9 @@
-\section{Tracking Score}
-\subsection{Initialization}
-     
+\section{Tracking score}
+Based on the life span of a tracked object, there is three stages: initialization, tracking and termination. 
+Most literature focuses on tracking, assuming initialization and termination are properly handled.
+However, for practical use, each stage should be carefully dealt with to ensure the performance. 
+For the first time, we introduce applying the scene-specific semantic knowledge to object tracking throughout the objects' lifetime. 
+\subsection{Initialization}     
     An object being ``out of scene'' actually refers to two scenarios: out of image boundary or too small to be recognized. Without loss of generation, this corresponds to both two cases when objects enter and exit the scene, as an example given in \ref{fig:semantic-entry-exit}. 
     These two cases may be problematic for tracker initialization and termination if not handled correctly. An object may either be initialized when being partially visible or too small to be recognized. 
     Different with the standard object tracking framework, tracking task in real-world use usually relies on external algorithms to find object candidates. Consequently, it is a critical step to the overall performance of any related surveillance task.
@@ -61,7 +64,7 @@
     However, in case the object is still able to be correctly tracked, we mark it and keep tracking until it gets lost, we call this phase \emph{extended tracking}. 
     The final trajectory is until the object gets lost. This is especially useful when the object exists with a tiny size. Due to the filtering of the topic model training process, tiny movements are filtered as noises. However, when the object is able to be tracked beyond the exit zone, it is better to keep a longer trajectory. 
 
-\subsection{Tracking Evaluation}
+\subsection{Tracking quality evaluation}
 \label{sec:track_eval}
 An object's size, location, and motion are well constrained once we have a topic assignment of it. 
 Once we initialize a tracker, we check the tracking quality on every frame. In general, we want object move smoothly and follow its visual topic. To quantitatively evaluate this, we define a smoothness term for object's scale change:

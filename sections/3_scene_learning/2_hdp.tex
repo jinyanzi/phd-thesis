@@ -1,4 +1,4 @@
-\section{Atomic Motion Extraction}
+\section{Atomic motion extraction}
 \label{sec:scene-hdp}
 
 Tracking performance can be improved with the help of scene semantics.
@@ -17,8 +17,7 @@ we adopt the trajectory finding algorithm from \cite{wang2009unsupervised} but i
 (i) identifying multiple significant trajectories rather than a single one, and
 (ii) sampling multiple possible instances from the same underlying trajectory to capture richer geometric information rather than a single line.
 The sampled instances reveal key information for tracking:
-(i) 
-hotspots where vehicles enter and exit the scene; and
+(i) hotspots where vehicles enter and exit the scene; and
 (ii) the extent in the direction perpendicular to the principal direction
 (namely the direction from the starting to the ending point)
 that will change nonlinearly but smoothly along that trajectory.
@@ -32,7 +31,7 @@ in a tracking model as constraints to greatly reduce the false positives with im
 %In the following part, we will briefly describe preliminary details for our method. Readers are referred to \cite{wang2009unsupervised, yee2006hierarchical} for more details about the topic model.
 \input{img/scene_workflow}
 
-\subsection{Non-parametric Clustering via \gls{hdp}}
+\subsection{Non-parametric clustering via \gls{hdp}}
 \label{subsec:hdp-bag-of-words}
 For general purpose of scene learning, lower-level representation could be a much more robust feature due to the difficulty of obtaining an accurate higher-level result, such as consistent object trajectories. Cluster of such low-level data as pixel movement could be an informative summary.
 Inspired by the previous work \cite{wang2009unsupervised,kuettel2010s}, motion patterns are able to be learned by topic model, with a analogous bag-of-words representation to document classification.

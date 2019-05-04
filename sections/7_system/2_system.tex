@@ -1,15 +1,16 @@
-\section{Vehicle Counter}
+\section{Vehicle counter}
 \label{sec:system-counter}
 
 After the tracking process finishes, the number of trajectories is regarded as vehicle counts.
 However, the current traffic statistics of \gls{idot} contains specific vehicle counts on different directions. 
-To match the format of the existing reports, not only we have to obtain the total number of vehicles, each vehicle has to be correctly classified to its corresponding motion.
+To match the format of the existing reports, not only we have to obtain the total number of vehicles, each vehicle has to be correctly classified to its corresponding motion. 
+The accumulative counts of each motion is the desired results.
 Consequently, vehicle movements have to be available apart from the tracking results.
 With different tracking strategy, motions are obtained differently: with our heuristic tracker, we rely on human annotated input; however, with the semantic tracker, we learn the motion offline by unsupervised learning.
 
-\subsection{Vehicle Counter with Human Annotation}
+\subsection{Vehicle counter with human annotation}
 Initially, users upload videos via FTP and operated on our GUI interface by remote desktop.
-Our GUI interface and require the user to draw a few line segments as the templates of the vehicle motion.
+Our GUI interface and require the user to draw a few line segments as the templates of the vehicle motion, we call it \emph{motion template}.
 \ref{fig:anno-gui} is the screen shot of the interface, where the motion templates mostly align with the road surface. 
 However, a road may have more than one motion due to potential multiple lanes. 
 \ref{fig:kf-counter} shows our first counter framework with the heuristic tracker. 
@@ -21,18 +22,24 @@ Suppose we have a set of $n$ motion templates $\mathbf{T} = \{\mathbf{T}_1, \mat
 \input{img/counter}
 \input{img/anno_gui}
 
-\subsection{Vehicle Counter with Semantic Knowledge}
-With offline learned semantic knowledge per camera, the system becomes end-to-end without any human input. 
+\subsection{Vehicle counter with semantic knowledge}
 \ref{fig:semantic-counter} shows the workflow of the improved counter with semantic knowledge. 
-Motion topics are learned fully automatically.
-By online inference, each tracked vehicle is assigned to a motion until leaving, therefore, the counting is finished along tracking. 
+After offline learning in \S\ref{sec:scene-hdp}, the distribution of visual topics are learned. and each of them is a parametrized model.
+In the tracking process \S\ref{sec:semantic-inf}, the fitting of each tracked vehicle with every model is examined by online inference.
+In other words, the motion of the tracked vehicle could be determined by the most fitted motion model. 
+By increasing the vehicle count of each vehicle's motion upon leaving, counting could be done along with tracking. 
 
 \input{img/semantic_counter}
 
-\subsection{Web Portal}
-For remote access, we build a web portal for this system for \gls{idot}. Currently the scene understanding module has not been integrated, only the what shown in \ref{fig:kf-counter} is implemented.
-Cameras are displayed on map as shown in \ref{fig:sys-main}, with a list of their name on the left. Users may create or browse cameras by list or map, and upload videos for each camera. Once a new camera is created and the first video is uploaded, the user need to draw the motion templates.
-Once a video is uploaded, the tracker and counter will be called in the background. Users may return later to check and download the results. We allow at most four videos processed at the same time. 
-\ref{fig:sys-camera} and \ref{fig:sys-video} are the camera view and video view with traffic summary and visualization. 
-Each camera may have multiple videos. Summary of all the videos is displayed. In the video view, counts of different motions are displayed.
+\subsection{Web portal}
+Based on the feedbacks from \gls{idot} about our previous GUI interface, we build a web portal of this system that integrates all the previous functions.
+Currently, the system only supports manual template annotation as in \ref{fig:kf-counter}, the scene understanding module has not been integrated.
+\ref{fig:sys-main} is the main interface of camera display: cameras are displayed on map, with a list of their name on the left. 
+Users may create or browse cameras by list or on map, and upload videos for each camera. 
+Similar with our previous GUI, once a new camera is created and the first video is uploaded, the user need to draw the motion templates.
+Then the tracker and counter are executed sequentially in the background. 
+Users may return later to check the progress and download the results. We allow at most four videos processed at the same time. 
+\ref{fig:sys-camera} and \ref{fig:sys-video} are the interface for camera and videos. 
+Each camera may have multiple videos, all its videos and their count summary is displayed on the left in the camera view. 
+Clicking a video in the list leads to its individual video view. The video is played and detailed counts on each motions are displayed.
 \input{img/system}

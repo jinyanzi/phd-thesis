@@ -31,7 +31,7 @@ Usually we assume $\mathbf{\mu(X)} = 0, \mathbf{\mu(X)}_* = 0$. The \gls{rbf} ke
 \end{align}
 where $\sigma_{f}$ and $l$ are hyper parameters of the GP.
 
-\subsection{Multiple Output Gaussian Process}
+\subsection{Multiple output Gaussian Process}
 
 In our case, ideally we want to learn a scene-specific motion model, which is a mapping of vehicle states between two consecutive frames. 
 The history trajectories provide such mapping for training. 
@@ -41,7 +41,7 @@ Each dimension of the output $\mathbf{y}$ exactly matches the input, since it wi
 In \S\ref{sec:gp}, $y$ is a real value, while here it is extended to multiple output \gls{gp}, where $\mathbf{y} \in \mathbb{R}^{4}$. 
 Despite the different output dimension, the \gls{gp} is trained jointly over all the dimensions and the prediction for regression is the same with \ref{eq:gp-predict}, equivalent to the case that each dimension of the output is independent.
 
-\subsection{Online Processing for Streaming Data}
+\subsection{Online processing for streaming data}
 
 
 
