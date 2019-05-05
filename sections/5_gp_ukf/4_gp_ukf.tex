@@ -11,29 +11,27 @@ $$\mathbf{z}=[x^{bg}, y^{bg}, w^{bg}, h^{bg}, x^{det}, y^{det}, w^{det}, h^{det}
 Similarly, the measurement model $H$ is a $6\times10$ matrix with $1$ at $(0, 0),$ $(1, 1),$ $(2, 2),$ $(3, 3),$ $(0, 4),$ $(1, 5),$ $(2, 6),$ $(3, 7),$ $(4, 8),$ $(5,9)$.
 
 \begin{algorithm}
- \caption{GP-UKF.}\label{alg:gp-ukf}
- \begin{algorithmic}[1]
- \Require {State transition mapping $\{\mathbf{x}_{t-1}, \mathbf{x}_{t}\}$ from history data.}
- \State State with $\hat{\mathbf{x}}_{0} = \mathbf{x}_{0}$.
- \For{each frame $t$} 
-     \State Calculate the sigma points: $\mathcal{X}_{t-1} = \left[\hat{\mathbf{x}}_{t-1}, \hat{\mathbf{x}}_{t-1}\rpm\sqrt{(d+\lambda)P_{t-1}}\right]$.
-     \State Predict:
-     \State{$\begin{aligned} 
-     \hat{\mathcal{X}}_{i, t} = & \text{GP}_{\mu}(\mathcal{X}_{i, t-1}, \mathbf{X}), \quad i = 0, \dots, 2d\\
-     \hat{\mathbf{x}}_{t} = & \sum_{i=0}^{2d}{W_i^{(m)}\hat{\mathcal{X}}_{i,t}} \\
-     P_{t}^{\mhyphen} = & \sum_{i=0}^{2d}{W_i^{(c)}[\hat{\mathcal{X}}_{i,t}-\hat{\mathbf{x}}_t^{\mhyphen}][\hat{\mathcal{X}}_{i,t}-\hat{\mathbf{x}}_t^{\mhyphen}]^T} \\
-     \hat{\mathcal{Z}}_t = & H\hat{\mathbf{x}}_{t} \\
-     \hat{\mathbf{z}}_t^{\mhyphen} = & \sum_{i=0}^{2d}{W_i^{(m)}\hat{\mathcal{Z}}_{i,t}}
-     \end{aligned}$}
-     \State Get measurement covariance of $\mathbf{z}_{t}$: $ R_t = \text{GP}_{\sigma}(\mathbf{z}_t, \mathbf{X})$.
-     \State Correct with measurement:
-     \State {$\begin{aligned} 
-     P_{\hat{\mathbf{z}_t}, \hat{\mathbf{z}_t}} = & \sum_{i=0}^{2d}{W_i^{(c)}[\hat{\mathcal{Z}}_{i,t}-\hat{\mathbf{z}}_t^{\mhyphen}][\hat{\mathcal{Z}}_{i,t}-\hat{\mathbf{z}}_t^{\mhyphen}]^T} + R_t\\
-     P_{\hat{\mathbf{x}_t}, \hat{\mathbf{z}_t}} = & \sum_{i=0}^{2d}{W_i^{(c)}[\hat{\mathcal{X}}_{i,t}-\hat{\mathbf{x}}_t^{\mhyphen}][\hat{\mathcal{Z}}_{i,t}-\hat{\mathbf{z}}_t^{\mhyphen}]^T} \\
-     K = & P_{\hat{\mathbf{x}_t}, \hat{\mathbf{z}_t}}P_{\hat{\mathbf{z}_t}, \hat{\mathbf{z}_t}}^{-1}\\
-     \hat{\mathbf{x}}_t = & \hat{\mathbf{x}}_t^{\mhyphen} + K(\mathbf{z}_t-\hat{\mathbf{z}}_t^{\mhyphen})\\
-     P_t = & P_t^{\mhyphen} - KP_{\hat{\mathbf{z}_t}, \hat{\mathbf{z}_t}}K^T
-     \end{aligned}$}
-\EndFor
+\caption{GP-UKF.}\label{alg:gp-ukf}
+\begin{algorithmic}[1]
+\Require {State transition mapping $\{\mathbf{x}_{t-1}, \mathbf{x}_{t}\}$ from history data.}
+\State Start with $\hat{\mathbf{x}}_{0} = \mathbf{x}_{0}$.
+\State Calculate the sigma points: $\mathcal{X}_{t-1} = \left[\hat{\mathbf{x}}_{t-1}, \hat{\mathbf{x}}_{t-1}\rpm\sqrt{(d+\lambda)P_{t-1}}\right]$.
+\State Predict:
+\State{$\begin{aligned} 
+\hat{\mathcal{X}}_{i, t} = & \text{GP}_{\mu}(\mathcal{X}_{i, t-1}, \mathbf{X}), \quad i = 0, \dots, 2d\\
+\hat{\mathbf{x}}_{t}^{\mhyphen} = & \sum_{i=0}^{2d}{W_i^{(m)}\hat{\mathcal{X}}_{i,t}} \\
+P_{t}^{\mhyphen} = & \sum_{i=0}^{2d}{W_i^{(c)}[\hat{\mathcal{X}}_{i,t}-\hat{\mathbf{x}}_t^{\mhyphen}][\hat{\mathcal{X}}_{i,t}-\hat{\mathbf{x}}_t^{\mhyphen}]^T} \\
+\hat{\mathcal{Z}}_t = & \left[H\hat{\mathcal{X}}_{i, t}\right], \quad i = 0, \dots, 2d\\
+\hat{\mathbf{z}}_t^{\mhyphen} = & \sum_{i=0}^{2d}{W_i^{(m)}\hat{\mathcal{Z}}_{i,t}}
+\end{aligned}$}
+\State Get measurement covariance of $\mathbf{z}_{t}$: $ R_t = \text{GP}_{\sigma}(\mathbf{z}_t, \mathbf{X})$.
+\State Correct with measurement:
+\State {$\begin{aligned} 
+P_{\hat{\mathbf{z}}_t, \hat{\mathbf{z}}_t} = & \sum_{i=0}^{2d}{W_i^{(c)}[\hat{\mathcal{Z}}_{i,t}-\hat{\mathbf{z}}_t^{\mhyphen}][\hat{\mathcal{Z}}_{i,t}-\hat{\mathbf{z}}_t^{\mhyphen}]^T} + R_t\\
+P_{\hat{\mathbf{x}}_t, \hat{\mathbf{z}}_t} = & \sum_{i=0}^{2d}{W_i^{(c)}[\hat{\mathcal{X}}_{i,t}-\hat{\mathbf{x}}_t^{\mhyphen}][\hat{\mathcal{Z}}_{i,t}-\hat{\mathbf{z}}_t^{\mhyphen}]^T} \\
+K = & P_{\hat{\mathbf{x}}_t, \hat{\mathbf{z}}_t}P_{\hat{\mathbf{z}}_t, \hat{\mathbf{z}}_t}^{-1}\\
+\hat{\mathbf{x}}_t = & \hat{\mathbf{x}}_t^{\mhyphen} + K(\mathbf{z}_t-\hat{\mathbf{z}}_t^{\mhyphen})\\
+P_t = & P_t^{\mhyphen} - KP_{\hat{\mathbf{z}}_t, \hat{\mathbf{z}}_t}K^T
+\end{aligned}$}
 \end{algorithmic}
 \end{algorithm}
