@@ -5,7 +5,7 @@ With some successfully tracked objects, we may adaptively update the semantic sc
 More specifically, we update the corresponding topics with well-tracked objects, which are those enter through the entry area, tightly follow its belonging topic, and successfully exit through exit areas. 
 The scene is updated as follows: 
 The first and last location, along with the direction of a high-quality trajectory is used to update the entry/exit candidates; the rectangle perpendicular width wrt. its topic is used to update the topic perpendicular within its extent, where the updated value remains the mean of all the updates.
-By such iterative updating, we have more representative scene knowledge regarded to object tracking. The entry/exit area may gradually shift to where most objects actually enter and exit, where the perpendicular width of each topic also better fits the object statistics. The entire process is described in Algorithm \ref{alg:semantic-tracker} to \ref{alg:semantic-tracker-entry}.
+By such iterative updating, we have more representative scene knowledge regarded to object tracking. The entry/exit area may gradually shift to where most objects enter and exit, where the perpendicular width of each topic also better fits the object statistics. The entire process is described in Algorithm \ref{alg:semantic-tracker} to \ref{alg:semantic-tracker-entry}.
 
 \begin{algorithm}
  \caption{Tracking with semantic knowledge.}

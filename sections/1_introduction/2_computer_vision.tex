@@ -1,13 +1,23 @@
-\section{Computer vision}
+\section{Computer vision on surveillance data}
 \label{sec:intro-cv}
 
 
-With the progress in artificial intelligence and higher demand in its application, computer vision is becoming one the hottest areas. 
-Computer vision enables computers to perform tasks that used to be achieved only by human, such as visual detection and tracking. 
-With the superior advantage of computational speed, such tasks could be completed with a much faster speed.
+With the progress in artificial intelligence and higher demand in its application, computer vision is becoming one of its hottest sub-domains. 
+Computer vision enables computers to perform tasks that human is good at, such as visual detection and tracking. 
+With the superior advantage of computational speed, these tasks could be applied in large scale.
 
-With the progress of the hardware, the cost of camera has been significantly reduces, which results in the prevalence of the surveillance camera. 
-Compared with the traditional heavy equipment, they are more lightweight and easier to set up.
-They run continuously and cover large area of the interested area. 
-With the abundant video data, therefore, it is highly demanded to efficiently index and extract useful information for surveillance task.
+When the fundamental theory of this field has become rather mature, researchers gradually shift their attention to more specific tasks and data. For example, pedestrian detection \cite{dollar2012pedestrian} and face recognition \cite{parkhi2015deep}, gesture recognition \cite{rautaray2015vision} has become individual topics due to their huge application potential and high demand.
+On the other hand, surveillance videos have also drawn much attention because of the various practical challenges and the huge impact of applications. 
+Researchers are studying the computer vision problems specific to surveillance videos, such as anomaly detection \cite{scime2018anomaly}, tracking \cite{wu2015object} and counting \cite{seenouvong2016computer}. 
 
+
+The surveillance videos have a few unique features: 
+\begin{itemize}
+\item they are recorded ceaselessly, therefore, in large quantities; 
+\item they are usually of low-resolution qualities due to the transmission and storage limits;
+\item they have a special composition (pedestrian and vehicle) and the objects in the view move in a regular motion pattern.
+\item depending on the location, the video may contain a large number of objects with highly complex interactions.
+\end{itemize}
+
+Therefore, the complexity of the videos and the high-performance requirement raise challenges for robust surveillance systems. 
+Ideally, they are expected to perform the task with one-time setup and the minimal amount of human effort, with high accuracy and high speed.

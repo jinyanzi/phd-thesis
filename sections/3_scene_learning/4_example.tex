@@ -7,7 +7,7 @@ In the following, we first give some examples of the scene learning results, the
 Complementing the partial results in previous sections, \ref{fig:entry-exit-full-1}, \ref{fig:entry-exit-full-2} and \ref{fig:entry-exit-full-3} provide complete results on several scenes, 
 with the same representation as previous sections.
 \ref{fig:entry-exit-full-1} summarizes a low-resolution video, where the four main motions are captured, however, some turning motions may be missed. This is likely because optical flow with small magnitude is filtered as error before it is fed to the topic model, or because such motions are rare or do not appear in the training video.
-For higher resolution videos, such as \ref{fig:entry-exit-full-2} and \ref{fig:entry-exit-full-3}, optical flow results are more accurate and movement magnitudes are greater, when measured in pixels. Consequently, HDP is able to catch most visible motions, and even distinguish individual lanes.
+For higher resolution videos, such as \ref{fig:entry-exit-full-2} and \ref{fig:entry-exit-full-3}, optical flow results are more accurate and movement magnitudes are greater, when measured in pixels. Consequently, HDP can catch most visible motions, and even distinguish individual lanes.
 By visual inspection, the obtained movements, as well as the locations and directions of entry/exit points, are consistent with the subject scenes. 
 
 \input{img/scene_example.tex}

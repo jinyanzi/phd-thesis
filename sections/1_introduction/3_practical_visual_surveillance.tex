@@ -1,0 +1,21 @@
+\section{Practical visual surveillance}
+\label{sec:intro-surveillance-cv}
+
+While people in both civil engineering and computer vision are working toward the same goal --- building the real-world visual surveillance systems, there is still a big gap between the state-of-the-art research and the practice use.
+Researchers in academia need an in-depth study of a specific problem; therefore, they usually make simplified assumptions to isolate the problem and ignore the impact of other factors. 
+However, the real-world application runs in a complex environment and deals with noisy data. Data cleaning and processing speed have to be taken into account.
+For example, researchers care more about the novelty and performance of the solution and assume the computation resources are unlimited. 
+In this case, even though some algorithms outperform human, they are too slow to process a massive amount of data. 
+Besides, academic problems usually have a standard benchmark with well-processed data, so that people could spend the minimal amount of time on evaluation, with a uniformly acknowledged standard.
+However, those data might be too small and ideal compared with the real-world data, and the evaluation metric may not be comprehensive for those complex and noisy data for different tasks.
+
+After some failed trails of computer vision algorithms on data from the local department of transportation, it turns out that noisy data is one major obstacle for processing real-world data. 
+Besides, minimal human input and real-time processing speed is the prerequisite for large scale application.
+On the other hand, there lacks a standard benchmark and dataset for the researchers in the field to study the visual surveillance problems and solve the bottleneck problem.
+
+In this thesis, we try to address the aforementioned problems neglected in visual surveillance field and narrow the gap between the computer vision research and large scale application. 
+Specifically, we are building an end-to-end pipeline for transportation video analysis, minimizing human input and maximizing the throughput.
+We aim to solve the problems in vehicle tracking and counting that are critical to the performance, such as automatic tracking initialization/termination, noise elimination.
+On top of that, we try to further improve the algorithm performance by learning semantic knowledge in an unsupervised manner, taking into account that the regular vehicle motion pattern from a static camera could be informative for analytic tasks.
+Through comprehensive experiment and case studies, we show that proper initialization and termination improves the performance of the general automatic tracking framework with any tracking algorithm; and the semantic knowledge brings more benefits to multiple visual surveillance tasks.
+As a by-product of our experiment, we annotate and release a large dataset for the community \cite{yanziVehicleTracker}, aiming to attract and help more researchers to work on such problems.

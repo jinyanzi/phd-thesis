@@ -11,7 +11,7 @@ Instead, we extend a vehicle tracker with initialization- and update filters bas
 \input{img/semantic_tracker_eval_count}
 
 \ref{fig:semantic-eval-count} shows our main result. Here, we compare the tracker from \cite{yanziVehicleTracker}, labeled {\it heuristic}, against our version extended with a scene learning filter, labeled {\it scene}. 
-Although the {\it heuristic} tracker relies on several manually tuned parameters, this is one of the few benchmarks that quantitatively evaluate tracking including initialization and termination, which is key for any realistic vehicle tracking application.
+Although the {\it heuristic} tracker relies on several manually tuned parameters, this is one of the few benchmarks that quantitatively evaluate tracking including initialization and termination, which is critical for any realistic vehicle tracking application.
 
 Here, true and false positives are based on matching tracked vehicles with ground truth trajectories.
 We use the {\it overlap} of two rectangles, defined by the intersection over union for a rectangle box $\bm{r}$ and a ground truth $\bm{r}_0$,
@@ -89,7 +89,7 @@ In conclusion, we find that filtering tracker initialization and update using sc
 
 %Our filtering criteria follow this conclusion in two ways: first, with the definition of the last point, objects are initialized only when it completely enters the image. That is to say, the corresponding tracker has richer information than the those initialized partially seen.
 %Second, the topic model filters some noisy optical flows with tiny magnitude. 
-%Therefore, the extracted entry location will not expand to the noisy area with small movements. Under our entry criteria, tiny objects will not be initialized until passing through a more confident region.
+%Therefore, the extracted entry location does not expand to a noisy area with small movements. Under our entry criteria, tiny objects are not initialized until passing through a more confident region.
 %Further with the experiments on the state-of-the-art trackers in \cite{yanziVehicleTracker}, the author concludes that general purpose trackers could benefit from proper initialization. 
 %We could further infer that our semantic learning integrated initialization and tracking framework could be potentially useful any trackers in real-world use. 
 

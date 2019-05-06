@@ -10,16 +10,16 @@ This section describes some post-processing steps for extracting higher-level se
     We define two terms:
     $d^*_i = \argmax_{d}(\phi_i^{d})$ is the \emph{dominate direction} of grid $i$, which has the maximal value of distribution among all directions.
     We also define a terms summing over all the directions of each grid $\varphi_{i} = \sum_{d=1}^{D}{\phi_i^{d}}$.
-    Figure \ref{subfig:scene-grid-dist} shows an example of the distribution of a certain topic on a grid, where the radius of each sector indicates the value of $\phi_i^{d}$. 
+    Figure \ref{subfig:scene-grid-dist} shows an example of the distribution of a particular topic on a grid, where the radius of each sector indicates the value of $\phi_i^{d}$. 
     In this topic, the grid has the highest $\phi_i^d$ with $d=1$, indicating that it will be most likely to move along this direction. 
     \ref{fig:scene-ridge-clibming} gives a 3D visualization of the first topic in \ref{fig:scene-topics}, where the height at each grid is $\varphi_{i}$. 
     Overall they form a mountain-like surface. We aim to learn the shape and extent by extending the ridge climbing method in \cite{zhao2013counting}. 
     The idea of this method is to start from a high-density grid, make one step iteratively until reaching the image boundary or the low-density area. 
     The steps move along the desired direction and follow the shape of the topic distribution. 
-    For the purpose of consistency, all the following examples will be on the first topic in \ref{fig:scene-topics}.
+    For consistency, all the following examples are on the first topic in \ref{fig:scene-topics}.
     % Due to the different views of the videos, some topics may expand a wide area, resulting ridge, not in the center of the high-density area. Accordingly, we improve this method by getting multiple ridges and then shrink them into a more confident center line.
     \input{img/scene_ridge_climbing}
-    % Automatic entry/exit point learning is rarely addressed in current literature. \cite{makris2005learning} proposed a Mixture of Gaussian (MOG) methods to cluster start and end point of trajectories, however, this method is quite sensitive to noises. \cite{zhao2013counting} proposed a more robust ridge climbing method, given the HDP result above. Here we proposed an improvement of it based on sampling, adapting to more complicated videos.
+    % Automatic entry/exit point learning is rarely addressed in the current literature. \cite{makris2005learning} proposed a Mixture of Gaussian (MOG) methods to cluster start and end point of trajectories. However, this method is quite sensitive to noises. \cite{zhao2013counting} proposed a more robust ridge climbing method, given the HDP result above. Here we proposed an improvement of it based on sampling, adapting to more complicated videos.
     \input{img/scene_ridge_step}
 
     We propose a two-step movement in each iteration: first, we take a step, the step size is the normalized mean density on all the direction in its neighborhood; second, we adjust the step by moving toward higher density area. 
@@ -37,14 +37,14 @@ This section describes some post-processing steps for extracting higher-level se
     Here we choose a neighborhood with $n$ grids around $\bm{p}$, and $\bm{p}_{i}$ is the coordinate of the $i$th grid in the neighborhood. 
     Therefore, $f(\bm{\omega})\cdot\bm{\phi}_i$ is the mean direction weighted by densities on each direction. 
     However, the moving step may not follow the elongated shape of the topic due to the uncertainty introduced by the quantized direction, where an example is given in Figure \ref{subfig:scene-step}. 
-    To deal with it, we make an adjustment on the result of the move step \ref{eq:adjust}, once reaching a lower density area, $\bm{m}$ will pull the point back to the higher-density area and make the final step (solid arrow in Figure \ref{subfig:scene-step}) better follow the shape of the topic, as illustrated in step 2 in Figure \ref{subfig:scene-step}.
+    To deal with it, we make an adjustment on the result of the move step \ref{eq:adjust}, once reaching a lower density area, $\bm{m}$ pulls the point back to the higher-density area and make the final step (solid arrow in Figure \ref{subfig:scene-step}) better follow the shape of the topic, as illustrated in step 2 in Figure \ref{subfig:scene-step}.
     Note that in the adjust step, we compute a new neighborhood around the result of the move step.
     Intuitively, if we reach a grid that has significantly different densities, we tend to take a smaller step in case the step size is too large to follow the density surface. 
-    On the contrary, if the first step reaches a grid with a roughly uniform distribution around, $\bm{m}$ tends to be a zero vector and has no effect on the final step.
+    On the contrary, if the first step reaches a grid with a roughly uniform distribution around, $\bm{m}$ tends to be a zero vector and does not affect the final step.
     Due to the normalization term, $\bm{v}$ and $\bm{m}$ has magnitude at most $1$ in (\ref{eq:move}) and (\ref{eq:adjust}). 
     To make sure the adjust step does not cancel out the movement of step one, we normalize $\bm{v}$ into a unit vector. By setting $\alpha\in(0,1)$, it has a fixed impact on the final step. We observe that $\alpha\in[0.1,0.2]$ gives a reasonable result.
 
-    Figure \ref{subfig:scene-ridge-climbing} gives an visual illustration of the ridge climbing process along the dominate direction, and Figure \ref{subfig:scene-single-ridge} shows the resulting ridge. The process starts from the grid with the highest $\varphi$, indicated by the blue cross, along the dominate direction, in this case, direction 1. 
+    Figure \ref{subfig:scene-ridge-climbing} gives an visual illustration of the ridge climbing process along the dominant direction, and Figure \ref{subfig:scene-single-ridge} shows the resulting ridge. The process starts from the grid with the highest $\varphi$, indicated by the blue cross, along the dominant direction, in this case, direction 1. 
     The red line is the path to the end point of the ridge, with $f(\bm{\omega}) = \bm{\omega}$; while the green line reaches the start point, obtained by setting $f(\bm{\omega}) = -\bm{\omega}$. So far the results are similar with those in \cite{zhao2013counting}.
 
     \input{img/scene_ridge_results}
@@ -91,5 +91,5 @@ where the green and red star corresponds to $\bm{p}_{entry}$ and $\bm{p}_{exit}$
 Although entry/exit hotspots are also able to be obtained by fitting the start/end points of trajectories, they are less reliable than statistics learned from lower-level representation, since we are working on a tracking framework.
 
 % \subsection{Road Skeleton}
-% Next, we apply the Adaptive Multi-Kernel-based Shrinkage (AMKS) method \cite{xu2015unsupervised} to the extracted ridges, which is originally proposed for trajectory clustering. Roughly speaking, it is a clustering method along a certain direction. In this case, it is specific to the moving direction of the motions. In every iteration, each ridge moves toward the center. Ideally, after convergence, all the ridges will move to one centerline. Then the overlapped line is extracted as the final road skeleton. Before clustering, the overlapped ridges are filtered to reduce the computation overhead. The blue line in the right image in \ref{fig:scene} gives an example, where the dot at the right end indicates the sink. 
+% Next, we apply the Adaptive Multi-Kernel-based Shrinkage (AMKS) method \cite{xu2015unsupervised} to the extracted ridges, which is originally proposed for trajectory clustering. Roughly speaking, it is a clustering method in a certain direction. In this case, it is specific to the moving direction of the motions. In every iteration, each ridge moves toward the center. Ideally, after convergence, all the ridges move to one centerline. Then the overlapped line is extracted as the final road skeleton. Before clustering, the overlapped ridges are filtered to reduce the computation overhead. The blue line in the right image in \ref{fig:scene} gives an example, where the dot at the right end indicates the sink. 
 % \textcolor{red}{may discard it if not used by the tracker.}
