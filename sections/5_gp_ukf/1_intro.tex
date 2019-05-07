@@ -2,7 +2,7 @@
 \label{sec:gp-ukf-intro}
 
 The underlying assumption in \S\ref{sec:tracker-kf} is that vehicles follow the constant acceleration model in a short period, like in the physical world.
-However, everything the scene experiences distortion under projection in most traffic videos. Therefore, vehicles' movement does not follow the linear model in \ref{eq:linear-model}, and a linear state model is insufficient for the Kalman Filter to capture the movement pattern of the vehicles in the scene.
+However, everything the scene experiences distortion under projection in most traffic videos. Therefore, vehicles' movement does not follow the linear model in \ref{eq:kf-transition}, and a linear state model is insufficient for the Kalman Filter to capture the movement pattern of the vehicles in the scene.
 
 When good observations are available consistently, the Kalman filter can follow the tracked vehicle, even though the linear model cannot accurately reflect the size and velocity change. 
 With missing observation or occlusion, the tracker is expected to predict with its internal model in the \emph{extrapolation} mode. 
