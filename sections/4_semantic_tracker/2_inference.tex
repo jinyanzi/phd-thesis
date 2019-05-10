@@ -1,9 +1,30 @@
-\section{Object motion assignment by online inference}
+\section{Object motion assignment}
 \label{sec:semantic-inf}
 
-After learning the semantic knowledge for visual topics, we have to identify the topic assignment of a tracked object before any topic-specific constraints could be applied.
-We used the off-line trained topic model to do inference on newly come videos for the same camera. For inference on a certain frame, first a small window of consecutive frames close to the current one is chosen and processed into bag-of-words representation, same with training videos in Section \ref{subsec:hdp-bag-of-words}.  
-After inference, each word has a multinomial distribution over topics, and it is assigned to the one with maximal probability. 
-Assume that those frames contain consistent motions, we pick the most likely topic for each location. 
-For a tracked object covering multiple grids, we simply use majority voting for each object within its extent to get its topic assignment.
-We omit the inference detail here, for details we refer the reader to \cite{yee2006hierarchical}.
+The offline training phase generates models for the \emph{visual topic}, where the inference on the videos from the same camera helps identify the topic assignment of a tracked object before any topic-specific constraints are applied.
+To do inference, first, we need to make the frame the same format as the \emph{visual document}.
+We maintain a small sliding window of consecutive frames close to the current one, as well as its bag-of-words representation, same as in \S\ref{subsec:hdp-bag-of-words}.  
+The sliding window is across multiple frames; therefore, it takes the temporal consistency into account and is more robust than a single frame.
+
+After inference, each visual word $x$ is assigned to the topic with the maximal probability. 
+Then we reduce the results temporarily and spatially to the granularity of the grids on the frame.
+Assume $v_{x}$ is the index of $x$ in the vocabulary. 
+Each word index may have multiple counts considering the bag-of-words representation being a histogram.
+We take the result of majority voting as the topic assignment $k_v$ of the word index $v$ as following:
+\begin{align}
+k_{v} = \argmax_k{\sum_{x\in\{x:v_{x} = v\}}{\mathbf{1}(k_{x} = k)}},
+\end{align}
+where $\mathbf{1}(\cdot)$ is the indicator function.
+On the other hand, each grid maps to $D$ word index in the vocabulary, indicating $D$ directions in \ref{fig:scene-visual-doc}.
+Similarly, we could reduce the topic statistics to grids by majority voting.
+\begin{align}
+k_{g} = \argmax_k{\sum_{v\in\{v:g_{v} = g\}}{\mathbf{1}(k_v = k)}},
+\end{align}
+where $g_{v}$ is the grid that word index $v$ locates, and $k_g$ is the topic assignment of grid $g$ in that frame.
+When there comes a bounding box of interest, its topic assignment can be determined by the majority voting of topics of the covered grids.
+We omit the inference detail here; for details, we refer the reader to \cite{yee2006hierarchical}.
+
+Here the underlying assumption of the reduction is that each grid belongs to only one movement, which is a reasonable case on a single frame.
+If the sliding window is small, all of the words on the same grid are likely to have the same topic assignment.
+Therefore, the majority voting rules out some unusual cases where some $v$ has little counts.
+Another benefit of these methods is that since the inference is done on words level, it captures the correct topic assignment even with mixed topics in the scene.
