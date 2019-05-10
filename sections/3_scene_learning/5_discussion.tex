@@ -1,1 +1,17 @@
-\section{Future work}
+\section{Discussion}
+
+There remains some interesting aspects that could be potentially helpful for better scene understanding.
+First, it maybe be worth some effort of a better choice of hyper-parameters, such as grid size, number of quantized directions, video clip length, length training video, maximal sampling iterations.
+Grid size is related to the frame size. It is may not be necessary to have the same grid size for videos with different resolutions, since smaller grid size results in a larger vocabulary and a longer training time.
+For videos with only horizontal and vertical motions, the optical flow quantization could be sparser. 
+The video clip length may also need to adjust depending on different scenarios: ideally, we expect a video clip to cover a complete lifetime of single motion; shorter clip may break a topic into different parts while a longer video clip may generate a topic with mixed motions. 
+Also, we have consider the traffic density of the scene to choose the size of the training data. Crowded video may need a shorter training video than a video with little traffic.
+However, even though the topic model is trained on a longer video, some rare motions may still be missing.
+
+In addition, adding constraints among visual words might be necessary for some busy interactions. 
+A ``topic'' could be interpreted as a cluster containing ``words'' that always appear together, where the ``words'' are treated independently.
+For an intersection with bi-directional movements all the time, the movement on both direction is naturally clustered as a single ``topic''. 
+However, under the context of a video, the ``visual words'' are spatially and temporarily connected. 
+If a ``visual topic'' is defined with only a single motion, the ``visual words'' one the opposite direction should be mutually exclusive.
+We considered introducing such exclusion into \gls{hdp} via Hierarchical \gls{ddcrp} \cite{blei2011distance}.
+Due to the limited time, we do not completely finish this part.
