@@ -17,10 +17,37 @@ However, a road may have more than one motion due to potential multiple lanes.
 The tracker generates a set of vehicle trajectories; then each trajectory is assigned to a motion template that mostly matches its movement. 
 By increasing the count of each vehicle's assigned motion template, we can obtain the final traffic count of each movement. 
 
-Suppose we have a set of $n$ motion templates $\mathbf{T} = \{\mathbf{T}_1, \mathbf{T}_2, \dots, \mathbf{T}_n\}$ and a set of trajectories of $N$ vehicles $\Omega= \{\mathbf{O}_1, \mathbf{O}_2, \dots, \mathbf{O}_N\}$.
-
 \input{img/counter}
 \input{img/anno_gui}
+
+Suppose we have a set of $n$ motion templates $\mathbf{T} = \{\mathbf{T}_1, \mathbf{T}_2, \dots, \mathbf{T}_n\}$. 
+Each template consists of segments $T_{m} = \{s_{1}, s_{2}, \dots, s_{m_l}\}$ and $s_{m_\cdot}$ is a line segment, $m_{l}$ is the number of the line segments of template $T_m$.
+There is also a set of trajectories of $N$ vehicles $\Omega= \{\mathbf{O}_1^1, \mathbf{O}_1^2, \dots, \mathbf{O}_1^{t_1}, \mathbf{O}_2^1, \mathbf{O}_2^2, \dots, \mathbf{O}_2^{t_2}, \dots, \mathbf{O}_N^1, \mathbf{O}_N^2, \dots, \mathbf{O}_N^{t_N}\}$, where $t_i$ is the lifetime of object $i$.
+Each object is matched to the template with the minimal maximal distance.
+\begin{align}
+T_i^* = \argmin_{T}{\avg_{t\in\{1, \dots, t_i\}}{D(O_i^t, T)}}.
+\end{align}
+$d(O_i^t, T)$ is defined as the minimal distance between the trajectory point and motion template $T$, measuring the distance and direction consistency at the same time:
+$$d(O_i^t, T_m) = \min_{s\in\{T_m\}}{d(O_i^t, s)\cdot e^{-\alpha\cos(p(O_i^t, s))}}.$$
+$d(O_i^t, s)$ is the perpendicular distance of a point to the line segment $s$, 
+while $p(O_i^t, s)$ is the angle between $s$ and the moving direction of object $O_i$ at time $t$.
+$\alpha$ is a constant, currently set as 1.
+
+We develop the following template matching algorithm to ensure the trajectory is matched to the template that fit its motion most.
+We start matching from the most confident trajectory point and continue matching until reaching the source and sink point of the trajectory.
+Here the order of their closest segment was considered: all the trajectory points are not matched to the line segments of its previous trajectory point.
+$s^{it}$ is defined as the closest segment of $O_i^t$, which is the $t$th point of object $i$'s trajectory. 
+The distance $D(O_i^t, T)$ of object $O_i$ to template $T_m$ was computed as follows:
+\begin{itemize}
+\item Find the time $t^*$ such that $t_* = \argmin_{t\in\{1, \dots, t_i\}}{d(O_i^t, T_m)}$ and its closest segment $s^{it^*}$.
+\item For the points before $O_i^{t_*}: O_i^{t}\in\{O_i^{1}, O_i^{2}, \dots, O_i^{t_-1}\}$, the closest segment falls in the first line segment of $T_m$ to its successor’s closest segment:
+ $$D(O_i^t, T_m) = \min_{s\in\{s_1, s_2, \dots, s^{it-1}\}}{d(O_i^t, s)\cdot e^{-\alpha\cos(p(O_i^t, s))}}.$$
+\item For the points after $O_i^{t_*}: O_i^{t}\in\{O_i^{t^*+1}, O_i^{t^*+2}, \dots, O_i^{t_i}\}$, the closest segment falls in its predecessor’s closest segment to the last line segment of $T_m$:
+ $$D(O_i^t, T_m) = \min_{s\in\{s^{it^+1}, \dots, s_{m_l}\}}{d(O_i^t, s)\cdot e^{-\alpha\cos(p(O_i^t, s))}}.$$
+\end{itemize}
+
+By defining the distance function $D(\cdot)$ with both spatial distance and direction consistency and keeping the closest segment order, we eliminate close segments with inconsistent directions. 
+Finally, the number of trajectories belonging to each template is the desired vehicle count.
 
 \subsection{Vehicle counter with semantic knowledge}
 \ref{fig:semantic-counter} shows the workflow of the improved counter with semantic knowledge. 

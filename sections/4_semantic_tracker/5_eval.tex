@@ -20,7 +20,8 @@ $$\text{Overlap}(\bm{r}, \bm{r}_0) = \frac{A(\bm{r} \cap \bm{r}_0)}{A(\bm{r} \cu
 
 averaged over the frames in which the ground truth trajectory or the tracking result occurs. 
 
-As in \cite{yanziVehicleTracker}, we match each ground truth trajectory to the tracking result with the greatest overlap and use overlap $> 0.3$ to indicate a true positive. Any ground truth trajectories without a true positive match are considered false negatives, and any tracking result without a matched ground-truth trajectory with overlap > 0.3 is considered a false positive.
+As in \cite{yanziVehicleTracker}, we match each ground truth trajectory to the tracking result with the greatest overlap and use overlap $> 0.3$ to indicate a true positive. 
+Any ground truth trajectories without a true positive match are considered false negatives, and any tracking result without a matched ground-truth trajectory with overlap $> 0.3$ is considered a false positive.
 We find that our scene learning filter dramatically reduces false positives while keeping true positives essentially constant. 
 
 A large number of false positives remain for the high-resolution videos. Due to the complex vehicle interactions in high the resolution video (see \ref{fig:entry-exit-full-3}), even with the semantic knowledge, the na\"ive Kalman Filter may easily lose track, resulting in an increased false positive count.

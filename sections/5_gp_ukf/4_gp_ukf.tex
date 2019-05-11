@@ -1,4 +1,7 @@
 \section{GP-UKF tracker}
+\label{sec:gp-ukf}
+
+\subsection{Tracking}
 
 In the tracking setting, the state model is a nonlinear \gls{gp} model while the measurement model is still linear.
 \begin{align}
@@ -10,6 +13,7 @@ Similar with \S\ref{sec:tracker-kf}, the observation is still the bounding boxes
 $$\mathbf{z}=[x^{bg}, y^{bg}, w^{bg}, h^{bg}, x^{det}, y^{det}, w^{det}, h^{det}, v_x, v_y].$$ 
 Similarly, the measurement model $H$ is a $6\times10$ matrix with $1$ at $(0, 0),$ $(1, 1),$ $(2, 2),$ $(3, 3),$ $(0, 4),$ $(1, 5),$ $(2, 6),$ $(3, 7),$ $(4, 8),$ $(5,9)$.
 
+A complete step of the GP-UKF tracker is described in Algorithm \ref{alg:gp-ukf}, which could be adapted to the semantic tracker by substitution of the tracking step in Algorithm \ref{alg:semantic-tracker}.
 \begin{algorithm}
 \caption{GP-UKF.}\label{alg:gp-ukf}
 \begin{algorithmic}[1]
@@ -35,3 +39,15 @@ P_t = & P_t^{\mhyphen} - KP_{\hat{\mathbf{z}}_t, \hat{\mathbf{z}}_t}K^T
 \end{aligned}$}
 \end{algorithmic}
 \end{algorithm}
+
+\subsection{Cold start}
+Before any trajectory is available, we track vehicles automatically with the Kalman Filter with the linear model in \ref{sec:tracker-kf}. 
+With some accumulated trajectories, the \gls{gp} can predict for objects with similar size and location.
+However, the prediction may fail at some unseen data; therefore, it is necessary to assess the quality of the prediction.
+We use the covariance of the data point in \ref{eq:gp-cov}, since it measures the certainty of the prediction. 
+Upon initialization of an object, \gls{gp}-\gls{ukf} is used only when the obtained covariance is small ($< 0.1$); otherwise, the linear Kalman Filter is used.
+
+% \subsection{Measurement covariance}
+% Instead of manual hard-coded measurement covariance in \ref{sec:tracker-kf}, \gls{gp} also helps determine the measurement covariance.
+% Similarly, we use \ref{eq:gp-cov} to determine the quality of a measurement covariance .
+

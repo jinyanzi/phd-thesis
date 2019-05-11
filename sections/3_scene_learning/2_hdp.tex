@@ -53,7 +53,7 @@ Similarly, a cluster trained from the video could be called \emph{visual topic}.
 % In most clustering methods, the number of clusters should be provided, and the results may vary according to the number of clusters. 
 % Considering our goal to avoid unnecessary human input, we use the non-parametric model \gls{hdp} \cite{yee2006hierarchical} that required no specification of cluster numbers.
 % It is a generalization of \gls{dp}. 
-% In this model, the visual words are groups of observations, each exhibiting a mixed proportion of shared mixture components, also called "topics." 
+% In this model, the visual words are groups of observations, each exhibiting a mixed proportion of shared mixture components, also called ``topics''. 
 % An HDP is a two-level \gls{dp} with shared parameters. Each group $j$ is associated with a draw from a shared \gls{dp} whose base distribution is also a draw from the top-level \gls{dp}.
 % \begin{align}
 % G_0 & \sim DP(\gamma, H) \\
@@ -83,7 +83,7 @@ Using the bag-of-words representation, motions could be learned by any existing 
 In most clustering methods, the number of clusters is required as an input, and the results usually vary accordingly. For complex videos, it is presumably hard for people to identify the number of major motions. Therefore the non-parametric clustering method ---\gls{hdp} is used. 
 It is a generalization of \gls{dp}, requiring no specification of the cluster number. 
 In this model, visual words contain groups of observations, each exhibiting a mixed proportion of shared mixture components. 
-The mixture components are learned in this model, also called "topics". 
+The mixture components are learned in this model, also called ``topics''. 
 More specifically, an \gls{hdp} is a two-level \gls{dp} with shared parameters. Each group $j$ is associated with a draw from a shared \gls{dp} whose base distribution is also a draw from the top-level \gls{dp}.
 % In most clustering method, the results are sensitive to the number of clusters. Therefore, we naturally turn to Hierarchical Dirichlet Process (HDP), which is a non-parametric clustering method requiring no specification of cluster numbers. Figure \ref{fig:hdp} gives an graph illustration of HDP, Equation (\ref{eq:hdp}) gives mathematical formulation. We refer reader to \cite{yee2006hierarchical} for more details.
 % \begin{figure} 

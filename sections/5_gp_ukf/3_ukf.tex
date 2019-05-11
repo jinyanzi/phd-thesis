@@ -12,7 +12,7 @@ However, in many cases, at least one of the linear models does not hold. Therefo
 Additionally, in our case, there is no close-formed nonlinear motion model under camera projection. 
 Consequently, we use \gls{ukf}, where its nonlinear state model $f(\cdot)$ is learned by the non-parametric model \gls{gp}.
 
-\input{img/ut}
+% \input{img/ut}
 
 The key of \gls{ukf} is \gls{ut}, which calculates the statistics of random variables under a nonlinear transformation, accurately capturing the mean and the covariance to the 3rd order Taylor series expansion for Gaussian inputs. 
 For a random variable $\mathbf{x} \in \mathbb{R}^{d}$ with mean $\bar{\mathbf{x}}$ and covariance $\mathbf{P_x}$, to calculate the statistics of $\mathbf{z}$ under a nonlinear mapping $\mathbf{z} = g(\mathbf{x})$, first a set of sigma points are built around the $\bar{\mathbf{x}}$ \cite{wan2000unscented},
