@@ -1,0 +1,56 @@
+%-------------------------------------------------------------------------
+\section{Object tracking}
+%-------------------------------------------------------------------------
+%Object tracking
+Object tracking algorithms fall into either multi-object or single object tracking category. Multi-object trackers deal primarily with the combinatorial task of associating sets of detections across frames, often modeled as a graph-based global optimization problem 
+\cite{butt2013multi,berclaz2011multiple}.
+% \cite{zhang2008global,pirsiavash2011globally,henriques2011globally,butt2013multi,berclaz2011multiple}.
+%among which a large set of methods try to solve the association globally. 
+%Popular methods include linear programming \cite{jiang2007linear}, K-shortest path \cite{berclaz2011multiple}, network flows \cite{zhang2008global,pirsiavash2011globally,henriques2011globally,butt2013multi}, maximum weight independent sets \cite{brendel2011multiobject} and continuous energy minimization \cite{andriyenko2011multi}. 
+Such methods are computationally expensive, and typically impractical in time-critical applications. Meanwhile, single object tracking has experienced a rapid progress with the help of robust feature representation \cite{kwon2010visual} %jepson2003robust 
+and better learning scheme such as SVM \cite{hare2011struck} and boosting \cite{grabner2006real}. 
+%,grabner2008semi}, multiple instance learning \cite{babenko2009visual}.
+%The generative models look for the most similar objects, with more robust and adaptive appearance models \cite{jepson2003robust,kwon2010visual}. On the other hand, discriminative models are proven to be superior. Various classifiers are trained to separate the object and the background, such as SVM \cite{hare2011struck,bai2012robust}, boosting \cite{grabner2006real,grabner2008semi}, multiple instance learning \cite{babenko2009visual}. Recently correlation filter \cite{henriques2015high} has proven to be the state-of-the-art in terms of performance and speed.
+However, object tracking still remains a challenging problem due to the difficulty caused by changing appearance and occlusions. To cope with appearance change, better affinity measurement \cite{choi2015near} and adaptive learning schemes \cite{kalal2012tracking} may help.
+For occluded objects, multi-object trackers tend to inherently model occlusion, for example, using augmented graph representation \cite{butt2013multi} %, pirsiavash2011globally,henriques2011globally}; 
+%In multi-object tracker, \cite{perera2006multi} tries to keep object identity during detection linking, \cite{butt2013multi, pirsiavash2011globally} assumes some object may be invisible for a while and allows link between non-consecutive frames in a network flow graph, \cite{henriques2011globally} explicitly defines an augmented graph to include merge and split. 
+while single object trackers maintain the memory of the object appearance \cite{kalal2012tracking}.
+% Additionally, we see such generally designed algorithms may have restricted applicability on particular videos. For example, TLD tracker \cite{kalal2012tracking} handles long-time occlusions due to its memory, but may switch to similar object when the target is invisible. On the contrary, \cite{zhang2013structure} is good at discriminating similar objects, only when tracked objects maintain the relative location. 
+%As a result, video-specific features are applied for specific tasks such as crowd tracking \cite{zhao2012tracking,zhou2012understanding} and non-rigid object tracking \cite{godec2013hough, duffner2013pixeltrack}.
+%trackers are proposed correspondingly. Crowd tracking usually has very tiny objects of interest, therefore motion patterns are widely used \cite{zhao2012tracking,zhou2012understanding}; for non-rigid object tracking, segmentation is introduced to extract accurate object representation \cite{godec2013hough, duffner2013pixeltrack}.
+%In this paper, we focus on traffic videos with rigid objects of similar appearance and recurrent motion patterns. 
+
+%-------------------------------------------------------------------------
+%Object initialization
+\section{Tracking initialization and termination}
+Trackers today are evaluated in an idealized setting, where manual initialization and termination is provided.
+Most multi-object trackers assume excellent detector performance, but do handle object entry/exit. They either model it intrinsically by adding entry/exit nodes to the optimization graph
+\cite{zhang2008global}, 
+%,henriques2011globally,pirsiavash2011globally,zamir2012gmcp} 
+or manually by defining an entry and exit area
+\cite{andriyenko2011multi}.
+%,berclaz2011multiple,zhou2012understanding}. 
+%In single object tracking evaluation, trackers typically are provided with a manually cropped box on the first frame and terminate at the last frame, assuming that object appears throughout the entire sequence. 
+In \cite{Wu_2013_CVPR}, 
+the only available literature we found related to tracker initialization, 
+the authors evaluate single-object tracker initialization spatially and temporally, and conclude that spatial and temporal variation of initialization can affect the tracking performance. However, no conclusion on how to make proper initialization is made.
+%Extending the conclusion, there exist much more complex scenarios of object entry and leaving than just being in or out of view in real-world use. 
+%We explicitly address the problem, pointing out the intrinsic drawbacks of background subtraction and object detection, proposing evaluation metrics, and offering initial solutions. 
+
+%-------------------------------------------------------------------------
+\section{Vision in traffic surveillance}
+%Traffic statistics used to be obtained by electronic devices, such as pneumatic road tubes, inductive loop detectors, magnetic sensors, piezoelectric cables, and weigh-in-motion sensors \cite{klein2006traffic}. These achieve good accuracy, at a high cost of installation and maintenance. 
+Recently computer vision techniques are extensively applied in traffic analysis with the wide deployment of surveillance camera, such as real-time vehicle tracking \cite{coifman1998real}, vehicle counting \cite{wang2015real}, 
+% night time vehicle detection \cite{chen2011real}, 
+parking occupancy detection \cite{bulan2013video}, anomalous event detection \cite{jiang2011anomalous}. %hsieh2006automatic, mimbela2000summary
+%Early back in 1998, there was system realizing real-time vehicle tracking \cite{coifman1998real}, later comes with more on other specific tasks such as vehicle counting \cite{hsieh2006automatic,wang2015real}, night time vehicle detection \cite{chen2011real}, parking occupancy detection \cite{bulan2013video}, anomalous event detection \cite{jiang2011anomalous}. 
+Compared with core computer vision algorithms, such systems face more real-world challenges and restrictions. Therefore manual input is often added to achieve reasonable performance. For instance,  image--real world coordinates mapping beforehand \cite{coifman1998real}, lane width on image \cite{chen2011real}, and entry region for vehicle detection \cite{chen2011real}. %coifman1998real
+Another observation is that those systems are only applicable to videos of a certain view.  
+%\cite{coifman1998real,hsieh2006automatic,wang2015real}. 
+For example, \cite{coifman1998real}
+%,hsieh2006automatic,wang2015real} 
+uses top-front view of high way videos, making vehicles roughly the same size. 
+%Similarly, \cite{jiang2011anomalous} applies to aerial view video, essentially eliminating occlusion. 
+Therefore, the portability is significantly limited by manual input and task-specific applications.
+
+%To the best of our knowledge, there is a lack of systematic study of vehicle tracking in general traffic surveillance video. %Therefore, we offer a new public benchmark and dataset to facilitate direct comparison between approaches, and attract other researchers to vehicle tracking in traffic surveillance video.

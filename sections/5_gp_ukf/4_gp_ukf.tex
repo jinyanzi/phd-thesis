@@ -13,7 +13,7 @@ Similar with \S\ref{sec:tracker-kf}, the observation is still the bounding boxes
 $$\mathbf{z}=[x^{bg}, y^{bg}, w^{bg}, h^{bg}, x^{det}, y^{det}, w^{det}, h^{det}, v_x, v_y].$$ 
 Similarly, the measurement model $H$ is a $6\times10$ matrix with $1$ at $(0, 0),$ $(1, 1),$ $(2, 2),$ $(3, 3),$ $(0, 4),$ $(1, 5),$ $(2, 6),$ $(3, 7),$ $(4, 8),$ $(5,9)$.
 
-A complete step of the GP-UKF tracker is described in Algorithm \ref{alg:gp-ukf}, which could be adapted to the semantic tracker by substitution of the tracking step in Algorithm \ref{alg:semantic-tracker}.
+A complete step of the GP-UKF tracker is described in Algorithm \ref{alg:gp-ukf}, which can be adapted to the semantic tracker by substitution of the tracking step in Algorithm \ref{alg:semantic-tracker}.
 \begin{algorithm}
 \caption{GP-UKF.}\label{alg:gp-ukf}
 \begin{algorithmic}[1]

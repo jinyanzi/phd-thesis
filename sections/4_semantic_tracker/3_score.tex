@@ -18,12 +18,12 @@ For the first time, we introduce applying the scene-specific semantic knowledge 
         \item \emph{Perpendicular width:} the distance between two intersection points of line $L(\bm{p_r}, \bm{v}_{\bm{r}\cdot\text{perp}})$ and the rectangle $\bm{r}$, written as $W(\bm{r}, \bm{v_r})$. 
         \item \emph{Last point:} the intersection point of ray $R(\bm{p_r}, \bm{-v_r})$ with the rectangle $\bm{r}$, written as $P(\bm{r}, \bm{v_r})$.
     \end{itemize}
-    Here $\bm{v}_{\bm{r}\text{perp}}$ is the vector perpendicular to $\bm{v_r}$, such that $\bm{v_r}\cdot\bm{v}_{\bm{r}\text{perp}}=0$. Since the object's aspect ratio may vary with the object type and view point of the camera, by defining the \emph{perpendicular width}, both width and height are taken into account. As we will show in the following, the definition of \emph{last point} has a better interpretation of object's moving process, specifically for entering and exiting the scene.
+    Here $\bm{v}_{\bm{r}\text{perp}}$ is the vector perpendicular to $\bm{v_r}$, such that $\bm{v_r}\cdot\bm{v}_{\bm{r}\text{perp}}=0$. Since the object's aspect ratio may vary with the object type and view point of the camera, by defining the \emph{perpendicular width}, both width and height are taken into account. As we show in the following, the definition of \emph{last point} has a better interpretation of object's moving process, specifically for entering and exiting the scene.
 
     \input{img/semantic_perp_width}
 
     In real-world applications, with no pre-determined object initialization available, applications usually rely on methods such as background subtraction and object detector, which usually tend to be error-prone.
-    With the learned semantic knowledge, we only initialize objects that are around the entry area of the current available topics, with consistent direction and reasonable size. Consequently, noisy candidates with inconsistent motions or far away from the entry area will be effectively eliminated. 
+    With the learned semantic knowledge, we only initialize objects that are around the entry area of the current available topics, with consistent direction and reasonable size. Consequently, noisy candidates with inconsistent motions or far away from the entry area are effectively eliminated. 
     % \begin{align}
     %     S_\text{dist}(\bm{p}, \bm{p}_1, \bm{p}_2) & = \frac{D\left(\bm{p}, \bm{p}_1\right)}{D\left(\bm{p}_1, \bm{p}_2\right)} \label{eq:entry_dist}\\
     %     S_\text{size}(x_1, x_2) & = 1 - \frac{|x_1 - x_2|}{x_1 + x_2} \label{eq:entry_size}\\
@@ -45,7 +45,7 @@ For the first time, we introduce applying the scene-specific semantic knowledge 
     The first term in the square parenthesis is the distance of $P(\bm{r}, \bm{v_r})$ to the exit point, relative to the entry point. It produces a high value for bounding boxes around the entry area, taking the extent of the topic into account without placing any hard threshold. 
     Note that instead of using the center of the rectangle $\bm{p}_{r}$, we use the last point of it. 
     As illustrated in Figure \ref{subfig:semantic-last-pt-dist}, when computing the distance of the object's bounding box and the hotspot, with the moving direction available, considering the last point along the direction measures the movement of the entire object. In other words, despite various object size, by ensuring the last point close to the entry/exit area, the entering/exiting process completes for the entire object.
-    The second term will be close to 1 if and only if $W(\bm{r}, \bm{v_r})$ and $W_k(\bm{p_r})$ are similar.
+    The second term is close to 1 if and only if $W(\bm{r}, \bm{v_r})$ and $W_k(\bm{p_r})$ are similar.
     This penalizes bounding boxes of size either too large or too small, making sure the qualified candidate has a reasonable size relative to the topic's perpendicular width. 
 
 
@@ -62,7 +62,7 @@ For the first time, we introduce applying the scene-specific semantic knowledge 
     \end{align}
     where we think the object passes through its exit area when $S_\text{exit}(\bm{r}, k) > \sigma_2$.
     However, in case the object is still able to be correctly tracked, we mark it and keep tracking until it gets lost, we call this phase \emph{extended tracking}. 
-    The final trajectory is until the object gets lost. This is especially useful when the object exists with a tiny size. Due to the filtering of the topic model training process, tiny movements are filtered as noises. However, when the object can be tracked beyond the exit zone, it is better to keep a longer trajectory. 
+    The final trajectory is until the object gets lost. This is especially useful when the object exists with a tiny size. Due to the filtering of the topic model training process, tiny movements are filtered as noise. However, when the object can be tracked beyond the exit zone, it is better to keep a longer trajectory. 
 
 \subsection{Tracking quality evaluation}
 \label{sec:track_eval}
@@ -89,6 +89,7 @@ Additionally, zero movements are not allowed. Since the object is not likely to 
 \end{align}
 In both measurement above, the notations are all similar with before, except that a subscript $t$ is added, indicating the corresponding variable at frame $t$. 
 $\bm{v}_k(\bm{p}_{\bm{r}_t})$ and $\bm{v}_k(\text{exit})$ are the main direction of topic $k$ at $\bm{r}_{t}$'s center point $\bm{p}_{\bm{r}_t}$, and exit area.
-A valid tracking is defined as $S_{\text{track}}(\bm{r}, k, t)>\sigma_{3}$ or $S_{\text{extend}}(\bm{r}, k, t)>\sigma_{4}$, depending on whether it has passed through its exit area. Unqualified tracking will be discarded as failures along the way.
+A valid tracking is defined as $S_{\text{track}}(\bm{r}, k, t)>\sigma_{3}$ or $S_{\text{extend}}(\bm{r}, k, t)>\sigma_{4}$, depending on whether it has passed through its exit area. 
+Unqualified tracking is discarded as failures along the way.
 By checking the tracking quality in this way, it is guaranteed that objects manage to pass the exit area follows its topic well and has a smooth movement and scale change. 
 Empirically, $\sigma_1\sim\sigma_{4}$ between $0.7\sim0.8$ are a reasonable threshold.

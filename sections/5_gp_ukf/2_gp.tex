@@ -30,7 +30,7 @@ Usually we assume $\mathbf{\mu(X)} = 0, \mathbf{\mu(X)}_* = 0$. The \gls{rbf} ke
 \kappa(\mathbf{x}_i, \mathbf{x}_j) = \sigma_f^2 \exp\left(-\frac{1}{2}\sum_{d=1}^{D}\left(\frac{\mathbf{x}_{id}-\mathbf{x}_{jd}}{l_d}\right)^2\right).
 \end{align}
 We use a different length scale for each dimension of $\mathbf{x}$.
-$\sigma_{f}$ and $l_{d}$ are hyper parameters of the GP, which are learned by though a optimization solver.
+$\sigma_{f}$ and $l_{d}$ are hyper parameters of the GP learned through a optimization solver.
 
 \subsection{Multiple output Gaussian Process}
 
@@ -48,7 +48,7 @@ One of the major challenges for \gls{gp} is the covariance matrix $\mathbf{K}$.
 $\mathbf{K}$ grows with the size of training data, while the cost of computing the inverse $\mathbf{K}^{-1}$ is $O(N^3)$.
 On the other hand, we have streaming training data as the tracking continues. 
 $\mathbf{K}$ need to be updated every time new data comes and every iteration of the optimization for the hyper-parameter.
-$\mathbf{K}$ could become enormously large if we store all the data. 
+$\mathbf{K}$ can become enormously large if we store all the data. 
 Therefore, we have to maintain the $\mathbf{K}$ to a reasonable size and avoid computing $\mathbf{K}^{-1}$ too frequently to balance the computation overhead.
 Some filtering and forgetting policies are applied here.
 

@@ -17,7 +17,7 @@ can deal with a subset of these conditions, but so far a generic system has been
 Background subtraction generates a binary foreground mask given a sequence of frames. Connected areas in the foreground mask can be treated as moving objects, although this technique can be error prone. 
 We use ViBe \cite{barnich2011vibe}, for its balance of speed, robustness and accuracy. However, other methods 
 % including \cite{stauffer1999adaptive, kaewtrakulpong2002improved,zivkovic2004improved,godbehere2012visual,kumar2000foreground, javed2002hierarchical,elgammal2000non,zivkovic2006efficient,wang2007consensus} 
-could be substituted with acceptable results in many cases.
+can be substituted with acceptable results in many cases.
 
 \ref{fig:tracker-bg} summarizes four common failure cases of the background subtraction with foreground bounding boxes on the original frame on the left and the foreground on the right. Automatic exposure (Figure \ref{subfig:bg-autoExposure}) is performed by the camera during recording, whereas illumination variation (Figure \ref{subfig:bg-illuminationChange}) is due to external light sources, such as the sun and vehicle headlights.
 Both automatic exposure and illumination variation cause rapid and widespread changes in pixel values, which most background subtraction methods struggle with. 
@@ -51,7 +51,7 @@ We use a state-of-the-art detector called faster-RCNN \cite{renNIPS15fasterrcnn}
 Running on a high-end graphics processing unit (GPU), the time required for detection on one image drops from 2 seconds \cite{felzenszwalb2010cascade} to 198 ms on the PASCAL 2007 dataset, making the real-time detection in video feasible. 
 %It reduces detection time from 2 seconds \cite{felzenszwalb2010cascade} to 198 ms on the PASCAL 2007 dataset, making real-time detection on videos possible. 
 However, like other detectors, faster-RCNN still has missing and false detections. In our measurements, it has a missing rate in excess of $65\%$ and $86\%$ on high- and low-resolution videos, respectively.
-Thus, given the high miss rate, especially on poor quality images, object detection alone will not suffice for a robust vehicle tracking system. 
+Thus, given the high miss rate, especially on poor quality images, object detection alone is not suffice for a robust vehicle tracking system. 
 
 %\ref{fig:det_update} gives the number of total detection boxes and ground truth on videos with different resolutions. The detector misses a large number of objects, especially on low resolution videos. 
 %This is because tiny vehicles in low resolution videos carry insufficient information for detector. 

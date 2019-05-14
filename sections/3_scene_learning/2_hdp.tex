@@ -9,8 +9,7 @@ First, to capture global and long-range trajectories
 with rich semantics,
 local motion patterns of smaller units, such as fine-grained grids, are extracted (step 1).
 We capture the local motion directions, which can be different but spatially interdependent across the grids, via a non-parametric topic model called \gls{hdp} \cite{yee2006hierarchical,wang2009unsupervised}.
-For any scene, the model flexibly captures any local motion directions,
-which are mixtures of base directions, without human presuming a universe of patterns.
+For any scene, the model flexibly captures any local motion directions, which are mixtures of base directions.
 Then, we synthesize global trajectories from the local patterns (step 2).
 Specifically,
 we adopt the trajectory finding algorithm from \cite{wang2009unsupervised} but improve it by:
@@ -33,23 +32,25 @@ in a tracking model as constraints to significantly reduce the false positives w
 
 \subsection{Non-parametric clustering via \gls{hdp}}
 \label{subsec:hdp-bag-of-words}
-For the general purpose of scene learning, lower-level representation could be a much more robust feature due to the difficulty of obtaining an accurate higher-level result, such as consistent object trajectories. A cluster of such low-level data as pixel movement could be an informative summary.
+For the general purpose of scene learning, lower-level representation is a much more robust feature due to the difficulty of obtaining an accurate higher-level result, such as consistent object trajectories. 
+A cluster of such low-level data as pixel movement is an informative summary.
 Inspired by the previous work \cite{wang2009unsupervised,kuettel2010s}, motion patterns can be learned by topic model, with an analogous bag-of-words representation to document classification.
 
 Videos are processed as described in \ref{fig:scene-visual-doc}: first every frame is divided into small grids --- small enough to have consistent optical flow results. 
 To distinguish different motions, optical flows of consecutive frames are quantized on $D$ directions after some simple filtering \cite{kalal2010forward}. 
 Making an analogy with to document clustering, on a certain frame, each optical flow at a grid coordinate $(x, y)$ on a quantized direction is a \emph{visual word}.
 If the frame is divided into $w\times h$ grids, the vocabulary is $V = w\times h\times D$.
+Please refer to \S\ref{sec:hdp-res} for the values we use for the above parameters.
 % To understand what a visual topic is, it is crucial to know how the video is represented in the topic model.
-% Even the grid could be smaller and $D$ be even larger, the corresponding vocabulary size could also slow down the sampling algorithm of topic models. 
+% Even the grid is smaller and $D$ be even larger, the corresponding vocabulary size is also slow down the sampling algorithm of topic models. 
 As shown in the middle column of \ref{fig:scene-visual-doc}, the videos are then split temporarily into short video clips. 
 Each video clip has enough frames to contain a complete motion, at the same time, is not too long to have mixed motions. 
 By counting the number of visual words on each grid and each quantized direction in every video clip, we have a bag-of-words representation of \emph{visual documents}. 
-Similarly, a cluster trained from the video could be called \emph{visual topic}.
+Similarly, a cluster trained from the video is called \emph{visual topic}.
 %Note that the bag-of-words representation treats each word independently. 
 \input{img/scene_visual_doc}
 
-% Using the bag-of-words representation, motions could be learned by any existing topic model method. 
+% Using the bag-of-words representation, motions can be learned by any existing topic model method. 
 % In most clustering methods, the number of clusters should be provided, and the results may vary according to the number of clusters. 
 % Considering our goal to avoid unnecessary human input, we use the non-parametric model \gls{hdp} \cite{yee2006hierarchical} that required no specification of cluster numbers.
 % It is a generalization of \gls{dp}. 
@@ -71,7 +72,7 @@ Similarly, a cluster trained from the video could be called \emph{visual topic}.
 % $$\theta_{ji}\sim G_j, \qquad x_{ji}\sim\text{Multi}(\theta_{ji}).$$
 
 % Here $\theta_{ji}$ is the topic assignment of $x_{ji}$, which is associated with a multinomial distribution $\phi_{\theta_{ji}}$. 
-% One could potentially have an infinite number of atoms. However, only a finite number of atoms/topics are be learned. 
+% One can potentially have an infinite number of atoms. However, only a finite number of atoms/topics are be learned. 
 % After Gibbs sampling, there is a multinomial distribution for each topic over the vocabulary where each word in a document has a topic assignment. 
 % \ref{fig:scene-topics} visualizes those topics learned by HDP. 
 % The color indicates the direction shown in the color wheel on the right and the lightness indicates the value of the multinomial at the corresponding cell. 
@@ -79,7 +80,7 @@ Similarly, a cluster trained from the video could be called \emph{visual topic}.
 % For simplicity, we only visualize the maximal value on each grid. 
 % The Figures show that HDP does a good job in summarizing the motions in the video, even without knowing any moving objects in the scene. For more details on Gibbs sampling, please see \cite{yee2006hierarchical}.
 % With some relaxation of term use, we also call it \emph{the density on the main direction}.
-Using the bag-of-words representation, motions could be learned by any existing topic model method. 
+Using the bag-of-words representation, motions can be learned by any existing topic model method. 
 In most clustering methods, the number of clusters is required as an input, and the results usually vary accordingly. For complex videos, it is presumably hard for people to identify the number of major motions. Therefore the non-parametric clustering method ---\gls{hdp} is used. 
 It is a generalization of \gls{dp}, requiring no specification of the cluster number. 
 In this model, visual words contain groups of observations, each exhibiting a mixed proportion of shared mixture components. 
@@ -113,7 +114,7 @@ In our setting, a group is a visual document and the $i$th word of the $j$th doc
 \end{aligned}
 \end{equation}
 Here $z_{ji}$ is the topic assignment of $x_{ji}$, each word is associated with a multinomial distribution $\theta_{ji}$ according to its topic $z_{ji}$. 
-We could potentially have an infinite number of atoms. However, only a finite number of atoms/topics are learned. 
+We can potentially have an infinite number of atoms. However, only a finite number of atoms/topics are learned. 
 After Gibbs sampling, there is a multinomial distribution for each topic over the vocabulary where each word in a document has a topic assignment. 
 In other word, words in the same document may belong to  \emph{different} topics. \ref{fig:scene-topics} visualizes those topics learned by HDP. 
 The color indicates the direction shown in the color wheel on the right and the lightness indicates the value of the multinomial at the corresponding grid. 

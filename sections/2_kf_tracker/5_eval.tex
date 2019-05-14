@@ -14,7 +14,7 @@ Since all these trackers require manual initialization (namely human input), the
 
 Given a set of generated and ground truth object trajectories, usually represented by a sequence of rectangular bounding boxes, we desire one or more performance metrics that capture the accuracy of the proposed system. Aspects that need to be captured include 1) tracking duration---if a ground truth trajectory of an object contains N frames, for how many of these frames does the system track the object, 2) recall---how many of the ground truth trajectories were represented in the tracking result, 3) precision---what proportion of tracking results had a corresponding trajectory, as well as 4) the overlap between the tracking result and the ground-truth.
 
-Note that our problem does not fit into common multi-object tracking setting, since moving objects are tracked individually, instead of being modeled globally. Common metrics such as MOTA \cite{bernardin2008evaluating} would generate a meaningless number since we could have potentially more objects tracked than ground truth.
+Note that our problem does not fit into common multi-object tracking setting, since moving objects are tracked individually, instead of being modeled globally. Common metrics such as MOTA \cite{bernardin2008evaluating} generates a meaningless number since we can have potentially more objects tracked than ground truth.
 
 As the first step, we match each ground truth to a tracking result, by maximizing the accumulated overlap ratio $r$, 
 \begin{align}
@@ -94,7 +94,7 @@ To accept manual initialization in scenes with significant scale change, each tr
     S_{thresh}=\left[\text{max}(S^{gt})-\text{min}(S^{gt})\right]*s + \text{min}(S^{gt}),
     \label{eq:thresh}
 \end{align}
-where $\text{max}(S^{gt})$ and $\text{min}(S^{gt})$ are the maximal and minimal ground truth areas along the sequence. $s\in \{0, 0.2, \dots, 1.0\}$, corresponds to the minimum fraction of the maximum object size at which initialization may occur. Note $s$ only affects objects that enter with an increasing size; while shrinking objects would be initialized upon appearance regardless of the threshold. 
+where $\text{max}(S^{gt})$ and $\text{min}(S^{gt})$ are the maximal and minimal ground truth areas along the sequence. $s\in \{0, 0.2, \dots, 1.0\}$, corresponds to the minimum fraction of the maximum object size at which initialization may occur. Note $s$ only affects objects that enter with an increasing size; while shrinking objects can be initialized upon appearance regardless of the threshold. 
 Tracking is terminated at the last frame of ground truth. 
 % Different with \cite{Wu_2013_CVPR}, we do not do any re-initialization after failure, since we are evaluating one-time tracking.
 We arrived at this design as some trackers tend to perform poorly when initialized by small images, yet delaying initialization until the object grows large can result in arbitrarily shortened trajectory.

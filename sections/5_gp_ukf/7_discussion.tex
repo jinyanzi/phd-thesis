@@ -1,9 +1,9 @@
-\section{Future work}
+\section{Discussion}
 
-Learning scene-specific non-linear movement models could be an interesting direction with huge potential. 
+Learning scene-specific non-linear movement models can be an interesting direction with huge potential. 
 Although \gls{gp} is a powerful formulation of this problem, there remains practical challenges for large streaming data processing.
 In \gls{gp} area, algorithms are tested on a simple and small dataset, which is usually several hundred data points with only one dimension.
 Although there a few papers working on online \gls{gp}, they are studying the incremental update of the covariance matrix, which avoids redundant computation of history data.
 However, the matrix cannot be infinitely large.
 Our filtering and forgetting strategy is heuristic methods for processing large streaming dataset.
-It could be interesting to see some methods for data forgetting with a rigorous proof of improvement, rather than random forgetting. 
+It is interesting to see some methods for data forgetting with a rigorous proof of improvement, rather than random forgetting. 
