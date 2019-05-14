@@ -6,7 +6,7 @@ For the first time, we introduce applying the scene-specific semantic knowledge 
 \subsection{Initialization}     
     An object being ``out of scene'' actually refers to two scenarios: out of image boundary or too small to be recognized. Without loss of generation, this corresponds to both two cases when objects enter and exit the scene, as an example given in \ref{fig:semantic-entry-exit}. 
     These two cases may be problematic for tracker initialization and termination if not handled correctly. An object may either be initialized when being partially visible or too small to be recognized. 
-    Different from the standard object tracking framework, tracking task in real-world use usually relies on external algorithms to find object candidates. Consequently, it is a critical step to the overall performance of any related surveillance task.
+    Different from the standard object tracking framework, tracking task in real-world use usually relies on external algorithms to find object candidates. Consequently, it is a critical step to the overall performance of any related task.
     In the following, we show how we apply the scene semantic knowledge into the tracking process and deal with the two scenarios above with a uniform affinity measurement. 
 
     \input{img/semantic_entry_exit}

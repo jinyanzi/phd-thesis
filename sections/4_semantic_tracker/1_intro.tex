@@ -10,7 +10,7 @@
 %%%%%%% Vision application requires human input, not automatic enough. %%%%%%% 
 Transportation videos are nowadays captured by millions of cameras installed at local and national highways and streets\footnote{The Illinois Department of Transportation has a huge database of 24-hour traffic videos all across Illinois.}.
 The analysis of such videos is critical for traffic volume monitoring, peak hour and congestion patterns discovery, tracing cars of criminals and stolen cars, highway toll management, among many others.
-For decades people have been trying to extract information from transportation surveillance videos.
+For decades people have been trying to extract information from traffic videos.
 For example, one can hire a large number of human workers to watch and mark up any subregions, frames, or clips, that contain information of interest.
 This practice is labor-intensive and not scalable,
 as the workers need to pause from time to time and carefully analyze each object frame-wise.
@@ -24,7 +24,7 @@ Even with high detection precision, recall can be low due to the bottleneck chea
 %%%%%%% Vision application requires human input, not automatic enough. %%%%%%% 
 Recently, advanced solutions based on computer vision
 are proposed to mitigate the bottleneck
-but are still limited by human processing bandwidth and far away from fully automatic traffic surveillance.
+but are still limited by human processing bandwidth and far away from fully automatic traffic analysis.
 % First, the learning-based computer vision algorithms require many hours of labeled data for model training.
 First, while precise specifications of capturing camera or the starting and ending points play a large role in tracking accuracy \cite{yanziVehicleTracker,tamersoy2009robust,rodriguez2010adaptive,mishra2013video,cheng2011intelligent,corral2017slot}, 
 the videos are time-consuming to hand-labeled accurately with this level of details,
@@ -33,7 +33,7 @@ while given a large number of cameras deployed nationwide, it is unwise to provi
 %
 Second,
 any models trained for one scene cannot be deployed in other scenes,
-as the semantics of surveillance scenes, such as entry/exit area \cite{tamersoy2009robust,rodriguez2010adaptive} or road surface \cite{bas2007automatic}, can differ from scene to scene. 
+as the semantics of traffic scenes, such as entry/exit area \cite{tamersoy2009robust,rodriguez2010adaptive} or road surface \cite{bas2007automatic}, can differ from scene to scene. 
 Also, the same camera can undergo slight adjustments in their focus and angle, and a model trained for that camera can become inaccurate and incur further costly re-calibrations.
 %More generally, a model trained on labeled data from one camera can't be used to surveillance videos from another camera.
 % , or to simply generalize models trained on a few cameras to all other cameras.
@@ -56,7 +56,7 @@ A vehicle tracker can benefit from the more restricted motion patterns in traffi
 entry/exit hotspots, \etc..
 We integrate the learned semantic knowledge into a tracker based on Kalman Filter,
 which can flexibly accommodate state-of-the-art object detectors like faster-RCNN~\cite{renNIPS15fasterrcnn}.
-Experiments on 13 long surveillance videos with diverse tracking scenes demonstrate the significantly improved tracking accuracy attained the proposed method, compared with other fully automatic approaches.
+Experiments on 13 long traffic videos with diverse tracking scenes demonstrate the significantly improved tracking accuracy attained the proposed method, compared with other fully automatic approaches.
 
 %%%%%%% Need apply scene learning to visual application %%%%%%% 
 
@@ -65,7 +65,7 @@ Experiments on 13 long surveillance videos with diverse tracking scenes demonstr
 Our preliminary contributions are as follows:
 \begin{itemize}%[noitemsep]
     % \setlength\itemsep{0em}
-    \item Explicitly addressed those critical yet ignored issues for practical surveillance applications, such as automatic initialization and termination.
+    \item Explicitly addressed those critical yet ignored issues for practical transportation applications, such as automatic initialization and termination.
     \item Proposed a self-adaptive framework to where trackers are guided by the learned semantic scene knowledge, while in return the semantic knowledge is updated with tracking statistics.
     \item Provided a comprehensive evaluation of the proposed framework and demonstrate a significant improvement on object tracking.
 \end{itemize}
