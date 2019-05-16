@@ -1,4 +1,4 @@
-\section{Practical intelligent transportation systems}
+\section{Practical challenges}
 \label{sec:intro-cv}
 
 While people in both civil engineering and computer vision are working toward the same goal --- building the real-world intelligent transportation system via computer vision, there is still a big gap between the state-of-the-art research and practice use.
@@ -13,10 +13,3 @@ However, those data might be too small and ideal compared with the real-world da
 We found out through experiment that noisy data is one major obstacle for processing real-world videos. 
 Besides, minimal human input and real-time processing speed is the prerequisite for large scale application.
 On the other hand, there lacks a standard benchmark and dataset for the researchers in the field to study the visual transportation problems and solve the bottleneck problem.
-
-In this thesis, we try to address the aforementioned problems neglected in the current computer vision field and narrow the gap between the computer vision research and large scale application. 
-Specifically, we are building an end-to-end system for vehicle tracking and counting on transportation videos, minimizing human input and maximizing the throughput.
-We aim to solve the problems in vehicle tracking and counting that are critical to the performance, such as automatic tracking initialization/termination, noise elimination.
-On top of that, we try to further improve the algorithm performance by learning semantic knowledge in an unsupervised manner, taking into account that the regular vehicle motion pattern from a static camera can be informative for analytic tasks.
-Through comprehensive experiment and case studies, we show that proper initialization and termination improves the performance of the general automatic tracking framework with any tracking algorithm; and the semantic knowledge brings more benefits to multiple visual tasks.
-As a by-product of our experiment, we annotate and release a large dataset for the community \cite{yanziVehicleTracker}, aiming to attract and help more researchers to work on such problems.

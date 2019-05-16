@@ -1,16 +1,30 @@
 \summary
 
 % One to two page summary of the entire work.  Like a long abstract.
-As the reduced manufacturing cost of camera brings the prevalence of transportation camera, people are putting more effort on efficient information retrieval from traffic videos.
-On the other hand, traffic videos are becoming a separate subject for academic study, due to their spacial features and wide applications.
+As the reduced manufacturing cost of cameras brings the prevalence of transportation camera, people are putting more effort into efficient information retrieval from traffic videos.
+On the other hand, traffic videos are becoming a separate subject for academic study, due to their special features and wide applications.
 However, there remains a huge gap between academic computer vision research and application. 
-Parties in the possession of a large amount of videos lack systematic methodology for different tasks;
-while the research community has little access to data with the same amount and complexity real-world data, algorithm performance also has a higher priority over practical bottlenecks in real-world application, such as throughput and automation.
+Parties in possession of a large number of videos lack systematic methodology for different tasks;
+while the research community has little access to data with the same amount and complexity real-world data, algorithm performance also has a higher priority over practical bottlenecks in a real-world application, such as throughput and automation.
 
 This thesis aims to bridge the gap between the state-of-the-art computer vision research and real-world application.
-We first address the critical problem of proper initialization and termination in object tracking algorithm, and propose a heuristic method for automatic initialization and termination.
+We first address the critical problem of proper initialization and termination in object tracking algorithm and propose a heuristic method for automatic tracking initialization and termination.
 Then we work on learning the scene-specific semantic knowledge and apply them for other tasks such as vehicle tracking and counting.
 We demonstrate the performance improvement by the heuristic method and further boost by the semantic knowledge.
 
-With feasibility for real-world deployment being the prerequisite, our methods are end-to-end without human input and run in real-time. 
+Have the feasibility for real-world deployment as the prerequisite, our methods are end-to-end without human input and run in real-time. 
 Finally, we annotate and release a comprehensive dataset for the community. 
+
+This thesis is organized as follows: 
+Chapter \ref{chp:intro} gives a brief introduction of the motivation and contribution.
+Chapter \ref{chp:tracker} addresses the importance of initialization and termination to the tracking performance and proposes our fully automatic tracker with heuristic initialization and termination. 
+Chapter \ref{chp:scene-learning} describes how to learn atomic motion patterns via non-parametric clustering method and extract higher-level semantic representation in the scene.
+Chapter \ref{chp:semantic-tracker} shows the learned semantic knowledge can help with better initialization and termination; therefore improve the tracking performance and eliminate noise.
+In chapter \ref{chp:gp-ukf}, we describe learning scene-specific motion model to make up for the simplified linear motion model in chapter \ref{chp:tracker}.
+Chapter \ref{chp:system} contains our user interfaces and two versions of vehicle counter with and -without semantic knowledge for \gls{idot}.
+Chapter \ref{chp:dataset} describes our public dataset from real traffic cameras.
+Chapter \ref{chp:related_work} give the related literatures for different parts of this thesis.
+
+Chapter \ref{chp:tracker}, \ref{chp:system} and \ref{chp:dataset} consist a complete end-to-end vehicle tracking and counting system, which were done before the preliminary exam.
+The work after the preliminary exam were mostly in chapter \ref{chp:scene-learning}, \ref{chp:semantic-tracker} and \ref{chp:gp-ukf}.
+These three chapters focus on further improvement on vehicle tracking, specifically via learning and applying semantic knowledge in an unsupervised manner. 

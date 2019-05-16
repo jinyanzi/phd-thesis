@@ -1,0 +1,19 @@
+\section{Introduction}
+
+In the field that has such a massive amount of video data like intelligence transportation, computer vision has become a primary tool for information retrieval from those videos.
+
+Usually, an agent has access to a specific kind of camera and aim to develop a system to perform a particular task.
+Therefore, such systems are usually restricted to some specific camera views or settings and hard to migrate to other tasks.
+Moreover, due to a large amount of videos, there is usually little annotation due to the expensive labor cost. 
+It is hard to carry out a quantitative evaluation for those systems.
+
+On the other hand, there lacks a comprehensive and widely accepted video dataset in the academic community.
+Although challenges like VOT \cite{kristan2017visual} and MOT \cite{milan2016mot16} are widely used in the object tracking community, the given data are relatively in small scale and lack real-world interactions, compared with what is directly acquired from the traffic camera.
+For example, the videos in VOT and MOT mostly have a few hundred frames, lasting no later than 1 minute; even though a few videos exceed 1000 frames, it is still too short compared with real-world data.
+Such a short sequence cannot raise enough attention to algorithm throughput.
+Despite the occlusion and consequent difficulties in the above dataset, those videos fail to address the critical challenges for intelligent transportation tasks.
+Most traffic cameras are mounted at a high place with little view changes, while the above popular datasets do not contain videos with such overlooking views. 
+Besides, objects tend to have intermittent stops and severe occlusion at intersections, which is also rarely available in the above datasets. 
+
+We release a comprehensive traffic video dataset with vehicle trajectory ground truth, containing various adversarial interactions. 
+We aim to provide other researchers with real-world data and raise more attention in such problems.
