@@ -40,7 +40,8 @@ The history trajectories provide such mapping for training and capture the non-l
 Different from \S\ref{sec:tracker-kf}, we use a six-dimension input $\mathbf{x} = [x, y, w, h, x', y']$, which represents the location, size and velocity of vehicle. 
 The output $\mathbf{y}$ has to have the same format with input $x$, as it becomes the input for the next frame.
 Therefore, the single-output \gls{gp} extends to multiple output, where $\mathbf{y} \in \mathbb{R}^{6}$. 
-We treat each dimension independently, and the covariance matrix is shared among all dimensions.
+The covariance matrix is shared among all dimensions, equivalent to several single-output \gls{gp} with the same 
+covariance matrix.
 
 \subsection{Online processing for streaming data}
 
@@ -49,16 +50,22 @@ $\mathbf{K}$ grows with the size of training data, while the cost of computing t
 On the other hand, we have streaming training data as the tracking continues. 
 $\mathbf{K}$ need to be updated every time new data comes and every iteration of the optimization for the hyper-parameter.
 $\mathbf{K}$ can become enormously large if we store all the data. 
+\ref{fig:gp-ds} shows the relationship between the trajectory count and the training data count. 
+The training data count grows linearly with the training trajectory.
+With about 32 trajectories, the matrix $\mathbf{K}$ size reaches 2000. 
+\input{img/gp_kernel_size}
+
 Therefore, we have to maintain the $\mathbf{K}$ to a reasonable size and avoid computing $\mathbf{K}^{-1}$ too frequently to balance the computation overhead.
 Some filtering and forgetting policies are applied here.
-
-First, we add a data point only when it differs from the previously added data point.
+First, we only add the data that has enough change over the previously added data point.
 Here $L1$ distance is used to measure the difference. 
 Similar trajectory record between adjacent frames is often seen when the tracked object remains static in the scene or is too small to have a large change of size or velocity.
 Second, we run hyper-parameter optimization upon the first batch of training data arrive; later we run the optimization with a longer interval.
 Finally, after the training data has reached the maximal number, every time a new data point becomes available, it is added with a possibility of $p = 0.7$ and a random old data point is removed.
+Moreover, once the $\mathbf{K}^{-1}$ is computed, the prediction only involves simple matrix multiplication.
+We implement the algorithm on GPU to have fast matrix operation.
 
 As the tracking continues, the covariance matrix $\mathbf{K}$ is maintained to a fixed size. 
 We also keep a separate thread for computing $\mathbf{K}^{-1}$ and hyper-parameter optimization. 
-
-
+The thread runs in the background without interrupting the tracker.
+The above methods ensure the tracker still run in real time.
